@@ -2,11 +2,11 @@ package bank;
 import java.util.List;
 
 public class BankAccount {
-    int #customerID;
-    int #accountNumber;
-    double #balance;
-    boolean #isFrozen;
-    List<Transaction> #transactionHistory;
+    int customerID;
+    int accountNumber;
+    double balance;
+    boolean isFrozen;
+    List<Transaction> transactionHistory;
 
     public BankAccount(int customerID, int accountNumber, double initialDeposit){
         throw new IllegalArgumentException("Not implemented yet");
