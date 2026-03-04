@@ -37,8 +37,8 @@ public class Customer implements UserInterface {
         return accounts;
     }
 
-
-    public void processTransaction(int accountNum){
+    // withdra or deposit amount into given account, transation type = 0 for withdra, 1 for deposit
+    public void processTransaction(int accountNum, double amount, int transactionType){
 
     }
 
