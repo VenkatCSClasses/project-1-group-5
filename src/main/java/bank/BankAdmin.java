@@ -10,7 +10,7 @@ public class BankAdmin {
         throw new IllegalArgumentException("Not implemented yet");
     }
 
-    public void processTransaction(int accountNumber, double amount){
+    public void processTransaction(int accountNumber, double amount, int transactionType){
         throw new IllegalArgumentException("Not implemented yet");
     }
 
