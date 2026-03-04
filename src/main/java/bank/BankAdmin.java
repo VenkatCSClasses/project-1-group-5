@@ -1,5 +1,29 @@
 package bank;
+import java.util.List;
 
 public class BankAdmin {
-    
+    public void createAccount(String accountHolderName, double initialDeposit, int accountType){
+        throw new IllegalArgumentException("Not implemented yet");
+    }
+
+    public void closeAccount(int accountNumber){
+        throw new IllegalArgumentException("Not implemented yet");
+    }
+
+    public void processTransaction(int accountNumber, double amount){
+        throw new IllegalArgumentException("Not implemented yet");
+    }
+
+    public double calculateTotalAssets(){
+        throw new IllegalArgumentException("Not implemented yet");
+    }
+
+    public void toggleFreezeAccount(int accountNumber){
+        throw new IllegalArgumentException("Not implemented yet");
+    }
+
+    public List<Transaction> getSuspiciousActivityReport(int accountNumber){
+        throw new IllegalArgumentException("Not implemented yet");
+    }
+
 }
