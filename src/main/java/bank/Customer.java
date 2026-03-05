@@ -39,24 +39,67 @@ public class Customer implements UserInterface {
         return accounts;
     }
 
-    // withdra or deposit amount into given account, transation type = 0 for withdra, 1 for deposit
+    // withdraw or deposit amount into given account, transation type = 0 for withdraw, 1 for deposit
     public void processTransaction(int accountNumber, double amount, int transactionType){
-
+        BankAccount account = null;
+        for (BankAccount acc : accounts) {
+            if (acc.getAccountNumber() == accountNumber) {
+                account = acc;
+                break;
+            }
+        }
+        if (account == null) {
+            throw new IllegalArgumentException("Account number not found.");
+        }
+        if (amount < 0) {
+            throw new IllegalArgumentException("Amount cannot be negative.");
+        }
+        Atm atm = new Atm("Main Street", 10);
+        atm.processTransaction(account, amount, transactionType);
     }
 
-    //get total balance for a specific account number, which is associated with the customer
+    //get total balance for a specific account number, which is associated with the bankAccount
     public double checkBalance(int accountNum){
-        return 0.0;
+        if (accounts.size()==0) {
+            return 0.00;
+        }
+        else {
+            for (BankAccount account : accounts) {
+                if (account.getAccountNumber() == accountNum) {
+                    return account.getBalance();
+                }
+            }
+        }
+        return 0.00;
     }
 
     //get the username, userID, accounNum, and list of Accounts
     public String getAccountDetails(){
-        return "";
+        String accountNums = "";
+        if (accounts.size()==0) {
+            return "Username: " + username + ", UserID: " + userID + ", AccountNum: " + accountNum + ", Accounts: []";
+        }
+        else
+        {
+            for (BankAccount account : accounts) {
+                accountNums += account.getAccountNumber() + ", ";
+            }
+            return "Username: " + username + ", UserID: " + userID + ", AccountNum: " + accountNum + ", Accounts: [" + accountNums.substring(0, accountNums.length() - 2) + "]";
+        }
     }
 
     //change the pin for the customer, pin has to be 4 digits, and the original pin has to match the current pin, and new pin can't be the same as original pin
     public void changePin(int originalPin,int newPin){
-
+        if (newPin==originalPin) {
+            throw new IllegalArgumentException("New pin cannot be the same as the original pin.");
+        }
+        if (String.valueOf(newPin).length() != 4) {
+            throw new IllegalArgumentException("New pin must be 4 digits.");
+        }
+        if (pin != originalPin) {
+            throw new IllegalArgumentException("Original pin is incorrect.");
+        }
+        this.pin = newPin;
     }
 
 }
