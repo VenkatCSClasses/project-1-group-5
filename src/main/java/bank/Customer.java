@@ -1,5 +1,6 @@
 package bank;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Customer implements UserInterface {
@@ -15,6 +16,7 @@ public class Customer implements UserInterface {
         this.userID = userID;
         this.accountNum = accountNum;
         this.pin = pin;
+        this.accounts = new ArrayList<>();
     }
 
     public String getUsername() {
@@ -38,11 +40,11 @@ public class Customer implements UserInterface {
     }
 
     // withdra or deposit amount into given account, transation type = 0 for withdra, 1 for deposit
-    public void processTransaction(int accountNum, double amount, int transactionType){
+    public void processTransaction(int accountNumber, double amount, int transactionType){
 
     }
 
-    //get balance for a specific account number, which is associated with the customer
+    //get total balance for a specific account number, which is associated with the customer
     public double checkBalance(int accountNum){
         return 0.0;
     }
@@ -52,8 +54,8 @@ public class Customer implements UserInterface {
         return "";
     }
 
-    //change the pin for the customer
-    public void changePin(int newPin){
+    //change the pin for the customer, pin has to be 4 digits, and the original pin has to match the current pin, and new pin can't be the same as original pin
+    public void changePin(int originalPin,int newPin){
 
     }
 

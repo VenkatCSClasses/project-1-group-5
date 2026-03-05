@@ -11,12 +11,12 @@ public class Atm {
     }
 
     //log in for users, specifically customers but tellers and admins can use this as well
-    public boolean validateCredentials(int accountNum, int pin){
+    public boolean validateCredentials(int userID, int pin){
         return false;
     }
 
     //does the deposit, withdraw, transfer
-    public void processTransaction(){
+    public void processTransaction(int accountNumber, double amount, int transactionType){
 
     }
 }
