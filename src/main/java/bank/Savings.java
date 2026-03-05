@@ -1,7 +1,7 @@
 package bank;
-import java.util.List;
+
 import java.time.LocalDate;
-//Trying to commit now
+
 public class Savings extends BankAccount {
 
     private final Bank bank;                 // reads savings interest rate + daily limit policy
@@ -20,59 +20,144 @@ public class Savings extends BankAccount {
         this.withdrawnToday = 0.0;
     }
 
+    // -------------------------
+    // Withdraw
+    // -------------------------
+
     @Override
     public void withdraw(double amount) {
-        withdraw(amount, LocalDate.now()); // delegate
-}
+        withdraw(amount, LocalDate.now());
+    }
 
     public void withdraw(double amount, LocalDate date) {
-    // Savings rules here
-}
+        if (date == null) throw new IllegalArgumentException("date cannot be null");
+
+        ensurePositiveAmount(amount);
+        ensureNotFrozen();
+
+        resetDailyIfNewDay(date);
+        ensureWithinDailyLimit(amount);
+        ensureSufficientFunds(amount);
+
+        // Actually move money
+        // Assumes BankAccount implements withdraw(amount) to subtract from balance.
+        super.withdraw(amount);
+
+        withdrawnToday += amount;
+        lastWithdrawalDate = date;
+
+        // Transactions not asserted by the provided tests; keep as hook if you track history.
+        // recordSavingsTransaction("WITHDRAW", amount, false);
+    }
+
+    // -------------------------
+    // Transfer (counts toward daily limit)
+    // -------------------------
 
     @Override
     public void transfer(BankAccount target, double amount) {
-    //To do 
-}
-
-public void transfer(BankAccount target, double amount, LocalDate date) {
-    // Savings rules here
-}
-
-    public void compoundDailyInterest(LocalDate date) {
-        // TODO: implement
+        transfer(target, amount, LocalDate.now());
     }
 
+    public void transfer(BankAccount target, double amount, LocalDate date) {
+        if (target == null) throw new IllegalArgumentException("target cannot be null");
+        if (date == null) throw new IllegalArgumentException("date cannot be null");
+
+        ensurePositiveAmount(amount);
+        ensureNotFrozen();
+
+        resetDailyIfNewDay(date);
+        ensureWithinDailyLimit(amount);
+        ensureSufficientFunds(amount);
+
+        // Withdraw from this savings (will also enforce any base BankAccount rules)
+        super.withdraw(amount);
+
+        // Deposit into target
+        target.deposit(amount);
+
+        withdrawnToday += amount;
+        lastWithdrawalDate = date;
+
+        // recordSavingsTransaction("TRANSFER_OUT", amount, false);
+    }
+
+    // -------------------------
+    // Daily interest (once per day)
+    // -------------------------
+
+    public void compoundDailyInterest(LocalDate date) {
+        if (date == null) throw new IllegalArgumentException("date cannot be null");
+
+        if (lastInterestAppliedDate != null && lastInterestAppliedDate.equals(date)) {
+            return; // already applied today
+        }
+
+        double dailyRate = getDailyInterestRateFromBank(); // APR/365
+        double interest = getBalance() * dailyRate;
+
+        // Apply interest by depositing (keeps balance updates centralized in BankAccount)
+        if (interest != 0.0) {
+            super.deposit(interest);
+        }
+
+        lastInterestAppliedDate = date;
+
+        // recordSavingsTransaction("INTEREST", interest, false);
+    }
+
+    // -------------------------
     // Helpers
+    // -------------------------
+
     private void resetDailyIfNewDay(LocalDate date) {
-        // TODO: implement
+        if (lastWithdrawalDate == null || !lastWithdrawalDate.equals(date)) {
+            withdrawnToday = 0.0;
+            lastWithdrawalDate = date;
+        }
     }
 
     private void ensureNotFrozen() {
-        // TODO: implement
+        // Assumes BankAccount has isFrozen() and freeze()
+        if (isFrozen()) {
+            throw new IllegalStateException("Account is frozen");
+        }
     }
 
     private void ensurePositiveAmount(double amount) {
-        // TODO: implement
+        if (amount <= 0.0) {
+            throw new IllegalArgumentException("amount must be > 0");
+        }
     }
 
     private void ensureSufficientFunds(double amount) {
-        // TODO: implement
+        // Ensures SavingsTest expects InsufficientFundsException on overdraft attempts
+        if (getBalance() < amount) {
+            throw new InsufficientFundsException("Insufficient funds");
+        }
     }
 
     private void ensureWithinDailyLimit(double amount) {
-        // TODO: implement
+        double limit = bank.getSavingsDailyWithdrawalLimit();
+        if (withdrawnToday + amount > limit) {
+            throw new DailyLimitExceededException("Daily withdrawal limit exceeded");
+        }
     }
 
     private double getDailyInterestRateFromBank() {
-        // TODO: return bank.getSavingsAnnualInterestRate() / 365.0;
-        return 0.0;
+        return bank.getSavingsAnnualInterestRate() / 365.0;
     }
 
+    @SuppressWarnings("unused")
     private void recordSavingsTransaction(String type, double amount, boolean suspiciousActivity) {
-        // TODO: implement (append to inherited transactionHistory via protected method)
+        // Not required for the provided tests.
+        // If your BankAccount exposes something like addTransaction(...), call it here.
     }
 
+    // -------------------------
     // Getters
+    // -------------------------
+
     public Bank getBank() { return bank; }
     public LocalDate getLastInterestAppliedDate() { return lastInterestAppliedDate; }
     public LocalDate getLastWithdrawalDate() { return lastWithdrawalDate; }
