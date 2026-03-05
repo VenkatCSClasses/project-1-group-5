@@ -1,7 +1,7 @@
 package bank;
 
 public class BankTeller{
-    public void createAccount(String accountHolderName, double initialDeposit, int accountType){
+    public void createAccount(int customerNumber, double initialDeposit, int accountType){
         throw new IllegalArgumentException("Not implemented yet");
     }
 
