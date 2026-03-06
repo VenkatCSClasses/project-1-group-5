@@ -1,5 +1,6 @@
 package bank;
 import java.util.List;
+import Math.random;
 
 public class Checking implements BankAccount {
     int customerID;
@@ -9,43 +10,192 @@ public class Checking implements BankAccount {
     List<Transaction> transactionHistory;
     List<Transaction> suspiciousActivity;
 
-    public Checking(int customerID, int accountNum, double balance){
-        throw new IllegalArgumentException("Not implemented yet");
+    public Checking(int customerID, double balance){
+        /*
+        Initialises a new checking account with the given customer  
+        The balance is set to 0.0 by default, and the account is not frozen by default.
+        The account number is generated automatically and is unique for each account.
+        */
+        this.customerID = customerID;
+        this.balance = balance;
+        this.isFrozen = false;
+
+        //generate unique account number
+        this.accountNum = (int) (Math.random() * 1000000);
     }
 
     @Override
     public void deposit(double amount) {
-        throw new IllegalArgumentException("Not implemented yet");
+        /*
+         Deposits the specified amount into the account.
+        If the amount is less than or equal to 0, an IllegalArgumentException is thrown with the message 
+        "Deposit amount must be greater than 0!".
+         
+        */
+
+        if(amount <= 0){
+
+            int transactionID = (int) (Math.random() * 1000000);
+            int timestamp = (int) (System.currentTimeMillis() / 1000);
+            String type = "Deposit";
+            boolean status = false;
+            boolean suspiciousActivity = false;
+            Transaction newTransaction = new Transaction(transactionID, timestamp, type, amount, status, suspiciousActivity);
+            this.transactionHistory.add(newTransaction);
+            throw new IllegalArgumentException("Deposit amount must be greater than 0!");
+        }else if(amount > 5000.0){
+            int transactionID = (int) (Math.random() * 1000000);
+            int timestamp = (int) (System.currentTimeMillis() / 1000);
+            String type = "Deposit";
+            boolean status = false;
+            boolean suspiciousActivity = true;
+            Transaction newTransaction = new Transaction(transactionID, timestamp, type, amount, status, suspiciousActivity);
+            this.transactionHistory.add(newTransaction);
+            this.suspiciousActivity.add(newTransaction);
+            throw new IllegalArgumentException("Deposit amount exceeds the limit of $5000.0!");
+        } else{
+
+            this.balance += amount;
+
+            int transactionID = (int) (Math.random() * 1000000);
+            int timestamp = (int) (System.currentTimeMillis() / 1000);
+            String type = "Deposit";
+            boolean status = true;
+            boolean suspiciousActivity = false;
+            Transaction newTransaction = new Transaction(transactionID, timestamp, type, amount, status, suspiciousActivity);
+            this.transactionHistory.add(newTransaction);
+
+        }
+    
     }
 
     @Override
     public void withdraw(double amount) {
-        throw new IllegalArgumentException("Not implemented yet");
+        /*
+        Withdraws the specified amount from the account.
+        If the amount is greater than the current balance, an IllegalArgumentException is thrown with the message "Insufficient funds!"
+        If the amount is less than or equal to 0, an IllegalArgumentException is thrown with the message "Withdrawal amount must be greater than 0!"
+   
+        */
+        if(this.balance < amount){
+            int transactionID = (int) (Math.random() * 1000000);
+            int timestamp = (int) (System.currentTimeMillis() / 1000);
+            String type = "Withdrawal";
+            boolean status = false;
+            boolean suspiciousActivity = false;
+            Transaction newTransaction = new Transaction(transactionID, timestamp, type, amount, status, suspiciousActivity);
+            this.transactionHistory.add(newTransaction);
+            throw new IllegalArgumentException("Insufficient funds!");
+        }else if(amount <= 0){
+            int transactionID = (int) (Math.random() * 1000000);
+            int timestamp = (int) (System.currentTimeMillis() / 1000);
+            String type = "Withdrawal";
+            boolean status = false;
+            boolean suspiciousActivity = false;
+            Transaction newTransaction = new Transaction(transactionID, timestamp, type, amount, status, suspiciousActivity);
+            this.transactionHistory.add(newTransaction);
+            throw new IllegalArgumentException("Withdrawal amount must be greater than 0!");
+        }else if(amount > 5000.0){
+            int transactionID = (int) (Math.random() * 1000000);
+            int timestamp = (int) (System.currentTimeMillis() / 1000);
+            String type = "Withdrawal";
+            boolean status = false;
+            boolean suspiciousActivity = true;
+            Transaction newTransaction = new Transaction(transactionID, timestamp, type, amount, status, suspiciousActivity);
+            this.transactionHistory.add(newTransaction);
+            this.suspiciousActivity.add(newTransaction);
+
+            throw new IllegalArgumentException("Withdrawal amount exceeds the limit of $5000.0!");
+        }else {
+            int transactionID = (int) (Math.random() * 1000000);
+            int timestamp = (int) (System.currentTimeMillis() / 1000);
+            String type = "Withdrawal";
+            boolean status = true;
+            boolean suspiciousActivity = false;
+            Transaction newTransaction = new Transaction(transactionID, timestamp, type, amount, status, suspiciousActivity);
+            this.transactionHistory.add(newTransaction);
+            this.balance -= amount;
+        }
+
+
+
     }
 
     @Override
     public void transfer(BankAccount targetAccount, double amount) {
-        throw new IllegalArgumentException("Not implemented yet");
+
+        if(this.balance < amount){
+            int transactionID = (int) (Math.random() * 1000000);
+            int timestamp = (int) (System.currentTimeMillis() / 1000);
+            String type = "Transfer";
+            boolean status = false;
+            boolean suspiciousActivity = false;
+            Transaction newTransaction = new Transaction(transactionID, timestamp, type, amount, status, suspiciousActivity);
+            this.transactionHistory.add(newTransaction);
+            throw new IllegalArgumentException("Insufficient funds!");
+        }else if (amount <= 0){
+            int transactionID = (int) (Math.random() * 1000000);
+            int timestamp = (int) (System.currentTimeMillis() / 1000);
+            String type = "Transfer";
+            boolean status = false;
+            boolean suspiciousActivity = false;
+            Transaction newTransaction = new Transaction(transactionID, timestamp, type, amount, status, suspiciousActivity);
+            this.transactionHistory.add(newTransaction);
+            throw new IllegalArgumentException("Transfer amount must be greater than 0!");
+        }else if (amount > 5000.0){
+            int transactionID = (int) (Math.random() * 1000000);
+            int timestamp = (int) (System.currentTimeMillis() / 1000);
+            String type = "Transfer";
+            boolean status = false;
+            boolean suspiciousActivity = true;
+            Transaction newTransaction = new Transaction(transactionID, timestamp, type, amount, status, suspiciousActivity);
+            this.transactionHistory.add(newTransaction);
+            this.suspiciousActivity.add(newTransaction);
+            throw new IllegalArgumentException("Transfer amount exceeds the limit of $5000.0!");
+        }
+        
+        else{
+            int transactionID = (int) (Math.random() * 1000000);
+            int timestamp = (int) (System.currentTimeMillis() / 1000);
+            String type = "Transfer";
+            boolean status = true;
+            boolean suspiciousActivity = false;
+            Transaction newTransaction = new Transaction(transactionID, timestamp, type, amount, status, suspiciousActivity);
+            this.transactionHistory.add(newTransaction);
+            this.withdraw(amount);
+            targetAccount.deposit(amount);  
+        }
+
     }
 
     @Override
     public double checkBalance() {
-        throw new IllegalArgumentException("Not implemented yet");
+        return this.balance;
+
     }
 
     @Override
     public List<Transaction> getSuspiciousActivity() {
-        throw new IllegalArgumentException("Not implemented yet");
+        return this.suspiciousActivity;2 
     }
 
     @Override
     public List<Transaction> getTransactionHistory() {
-        throw new IllegalArgumentException("Not implemented yet");
+        return this.transactionHistory;
+        
     }
 
     @Override
     public boolean isFrozen() {
-        throw new IllegalArgumentException("Not implemented yet");
+        return this.isFrozen;
+    }
+
+    @Override
+    public String toString() {
+        return "Checking Account - Customer ID: " + this.customerID + ", Balance: $" + String.format("%.2f", this.balance) + ", Frozen: " + this.isFrozen;
+    }
+
+
 
 
 
