@@ -7,7 +7,7 @@ public class BankAdmin {
     }
 
     public void closeAccount(int accountNumber){
-        throw new IllegalArgumentException("Not implemented yet");
+       Bank.bankAccounts.remove(accountNumber);
     }
 
     public void processTransaction(int accountNumber, double amount, int transactionType){
