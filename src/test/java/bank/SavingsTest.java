@@ -2,10 +2,9 @@ package bank;
 import org.junit.jupiter.api.*;
 import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
-//Practice push
+
 public class SavingsTest {
 
-    private Bank bank;
     private Savings savings;
     private Checking checking;
     private LocalDate day1;
@@ -16,16 +15,12 @@ public class SavingsTest {
         day1 = LocalDate.of(2026, 3, 3);
         day2 = day1.plusDays(1);
 
-        bank = new Bank();
-        bank.setSavingsAnnualInterestRate(0.365);   // daily = 0.001
-        bank.setSavingsDailyWithdrawalLimit(500.0);
+        // configure parameters statically
+        Savings.setSavingsAnnualInterestRate(0.365);   // daily = 0.001
+        Savings.setSavingsDailyWithdrawalLimit(500.0);
 
-        savings = new Savings(1, 100, 1000.0, bank);
-        checking = new Checking(2, 200, 0.0, bank);
-
-        
-        bank.addAccount(savings); // add to bank so it can track interest and limits
-        bank.addAccount(checking); //add to bank 
+        savings = new Savings(1000.0);
+        checking = new Checking(0.0);
     }
 
     

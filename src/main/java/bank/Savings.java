@@ -1,23 +1,36 @@
 package bank;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.lang.IllegalArgumentException;
-import java.lang.InsufficientFundsException;
+// custom exception classes in same package; no import necessary
 
 
 public class Savings extends BankAccount {
 
-    private final Bank bank;                 // reads savings interest rate + daily limit policy
+    // configuration previously provided by Bank: now static values set directly
+    private static double savingsAnnualInterestRate = 0.0;
+    private static double savingsDailyWithdrawalLimit = Double.MAX_VALUE;
+
     private LocalDate lastInterestAppliedDate;
 
     private LocalDate lastWithdrawalDate;
     private double withdrawnToday;
 
-    public Savings(int customerID, int accountNum, double startingBalance, Bank bank) {
-        super(customerID, accountNum, startingBalance);
-        if (bank == null) throw new IllegalArgumentException("bank cannot be null");
-        this.bank = bank;
+    /**
+     * Create a savings account with a randomly generated customer & account ID
+     * and zero opening balance.
+     */
+    public Savings() {
+        this(0.0);
+    }
 
+    /**
+     * Create a savings account with a randomly generated IDs and the given
+     * starting balance.
+     */
+    public Savings(double startingBalance) {
+        super(generateCustomerID(), generateAccountNum(), startingBalance);
         this.lastInterestAppliedDate = null;
         this.lastWithdrawalDate = null;
         this.withdrawnToday = 0.0;
@@ -43,7 +56,7 @@ public class Savings extends BankAccount {
         ensureSufficientFunds(amount);
 
         // Actually move money
-        // Assumes BankAccount implements withdraw(amount) to subtract from balance.
+        // BankAccount.withdraw already subtracts from balance.
         super.withdraw(amount);
 
         withdrawnToday += amount;
@@ -96,8 +109,8 @@ public class Savings extends BankAccount {
             return; // already applied today
         }
 
-        double dailyRate = getDailyInterestRateFromBank(); // APR/365
-        double interest = getBalance() * dailyRate;
+        double dailyRate = getDailyInterestRate(); // APR/365
+        double interest = checkBalance() * dailyRate;
 
         // Apply interest by depositing (keeps balance updates centralized in BankAccount)
         if (interest != 0.0) {
@@ -135,20 +148,33 @@ public class Savings extends BankAccount {
 
     private void ensureSufficientFunds(double amount) {
         // Ensures SavingsTest expects InsufficientFundsException on overdraft attempts
-        if (getBalance() < amount) {
+        if (checkBalance() < amount) {
             throw new InsufficientFundsException("Insufficient funds");
         }
     }
 
     private void ensureWithinDailyLimit(double amount) {
-        double limit = bank.getSavingsDailyWithdrawalLimit();
+        double limit = savingsDailyWithdrawalLimit;
         if (withdrawnToday + amount > limit) {
             throw new DailyLimitExceededException("Daily withdrawal limit exceeded");
         }
     }
 
-    private double getDailyInterestRateFromBank() {
-        return bank.getSavingsAnnualInterestRate() / 365.0;
+    private static double getDailyInterestRate() {
+        return savingsAnnualInterestRate / 365.0;
+    }
+
+    // configuration helpers used in tests or bank helper
+    public static void setSavingsAnnualInterestRate(double rate) {
+        savingsAnnualInterestRate = rate;
+    }
+
+    public static void setSavingsDailyWithdrawalLimit(double limit) {
+        savingsDailyWithdrawalLimit = limit;
+    }
+
+    public static double getSavingsDailyWithdrawalLimit() {
+        return savingsDailyWithdrawalLimit;
     }
 
     @SuppressWarnings("unused")
@@ -161,7 +187,6 @@ public class Savings extends BankAccount {
     // Getters
     // -------------------------
 
-    public Bank getBank() { return bank; }
     public LocalDate getLastInterestAppliedDate() { return lastInterestAppliedDate; }
     public LocalDate getLastWithdrawalDate() { return lastWithdrawalDate; }
     public double getWithdrawnToday() { return withdrawnToday; }

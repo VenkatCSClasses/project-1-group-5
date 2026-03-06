@@ -54,7 +54,7 @@ public class BankTest {
     @Test
     public void testTotalCashUpdatesAfterTransaction() {
         BankAccount account1 = new Checking(1, 1001, 500.0,bank);
-        BankAccount account2 = new Savings(1, 2, 2001, bank);
+        BankAccount account2 = new Savings(1, 2, 2001);
         
         double cashBeforeTransaction = bank.getTotalCash();
         account1.withdraw(50.0);
