@@ -10,19 +10,19 @@ public class BankTellerTest {
 
     @Test
     void createAccountTest(){
-        bankTeller.createAccount("John Doe", 1000.0, 1);
-        assert bank.getAccount(1).getAccountHolderName().equals("John Doe");
+        bankTeller.createAccount(1, 1000.0, 1);
+        assert bank.getAccount(1).getCustomerNumber() == 1;
         assert bank.getAccount(1).getBalance() == 1000.0;
         assert bank.getAccount(1).getAccountType() == 1;
         assert !bank.getAccount(1).isFrozen();
-        assert IllegalArgumentException.class.isInstance(bankTeller.createAccount("", 1000.0, 1));
-        assert IllegalArgumentException.class.isInstance(bankTeller.createAccount("John Doe", -1000.0, 1));
-        assert IllegalArgumentException.class.isInstance(bankTeller.createAccount("John Doe", 1000.0, 99));
+        assert IllegalArgumentException.class.isInstance(bankTeller.createAccount(0, 1000.0, 1));
+        assert IllegalArgumentException.class.isInstance(bankTeller.createAccount(1, -1000.0, 1));
+        assert IllegalArgumentException.class.isInstance(bankTeller.createAccount(2, 1000.0, 99));
     }
 
     @Test
     void closeAccountTest(){
-        bankTeller.createAccount("John Doe", 1000.0, 1);
+        bankTeller.createAccount(1, 1000.0, 1);
         bankTeller.closeAccount(1);
         assert bank.getAccount(1) == null;
         assert IllegalArgumentException.class.isInstance(bankTeller.closeAccount(99));
@@ -30,7 +30,7 @@ public class BankTellerTest {
 
     @Test
     void processTransactionTest(){
-        bankTeller.createAccount("John Doe", 1000.0, 1);
+        bankTeller.createAccount(1, 1000.0, 1);
         bankTeller.processTransaction(1, 500.0, 1); // deposit
         assert bank.getAccount(1).getBalance() == 1500.0;
         bankTeller.processTransaction(1, 200.0, 2); // withdrawal
