@@ -4,10 +4,11 @@ import java.util.List;
 public class BankAdmin {
     public void createAccount(int customerID, double initialDeposit, int accountType){
         BankAccount newAccount = new BankAccount(customerID, initialDeposit, accountType);
+        Bank.allAccounts.put(newAccount.getAccountNumber(), newAccount);
     }
 
     public void closeAccount(int accountNumber){
-        if (Bank.allAccounts.contains(accountNumber)) {
+        if (Bank.allAccounts.containsKey(accountNumber)) {
             Bank.allAccounts.remove(accountNumber);
         } else {
             throw new IllegalArgumentException("Account does not exist");
