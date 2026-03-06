@@ -7,19 +7,19 @@ public class BankAdmin {
     }
 
     public void closeAccount(int accountNumber){
-        if (Bank.bankAccounts.containsKey(accountNumber)) {
-            Bank.bankAccounts.remove(accountNumber);
+        if (Bank.allAccounts.contains(accountNumber)) {
+            Bank.allAccounts.remove(accountNumber);
         } else {
             throw new IllegalArgumentException("Account does not exist");
         }
     }
 
     public void processTransaction(int accountNumber, double amount, int transactionType){
-       if (Bank.bankAccounts.containsKey(accountNumber)) {
+       if (Bank.allAccounts.containsKey(accountNumber)) {
             if (transactionType == 1) {
-                Bank.bankAccounts.get(accountNumber).deposit(amount);
+                Bank.allAccounts.get(accountNumber).deposit(amount);
             } else if (transactionType == 2) {
-                Bank.bankAccounts.get(accountNumber).withdraw(amount);
+                Bank.allAccounts.get(accountNumber).withdraw(amount);
             } else {
                 throw new IllegalArgumentException("Invalid transaction type");
             }
@@ -30,15 +30,15 @@ public class BankAdmin {
 
     public double calculateTotalAssets(){
         double totalAssets = 0;
-        for (BankAccount account : Bank.bankAccounts.values()) {
+        for (BankAccount account : Bank.allAccounts.values()) {
             totalAssets += account.getBalance();
         }
         return totalAssets;
     }
 
     public void toggleFreezeAccount(int accountNumber){
-        if (Bank.bankAccounts.containsKey(accountNumber)) {
-            BankAccount account = Bank.bankAccounts.get(accountNumber);
+        if (Bank.allAccounts.containsKey(accountNumber)) {
+            BankAccount account = Bank.allAccounts.get(accountNumber);
             account.isFrozen = !account.isFrozen;
         } else {
             throw new IllegalArgumentException("Account does not exist");
@@ -46,8 +46,8 @@ public class BankAdmin {
     }
 
     public List<Transaction> getSuspiciousActivityReport(int accountNumber){
-        if (Bank.bankAccounts.containsKey(accountNumber)) {
-            return Bank.bankAccounts.get(accountNumber).getSuspiciousActivityReport();
+        if (Bank.allAccounts.containsKey(accountNumber)) {
+            return Bank.allAccounts.get(accountNumber).getSuspiciousActivityReport();
         } else {
             throw new IllegalArgumentException("Account does not exist");
         }
