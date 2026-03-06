@@ -38,7 +38,11 @@ public class BankAdmin {
     }
 
     public List<Transaction> getSuspiciousActivityReport(int accountNumber){
-        throw new IllegalArgumentException("Not implemented yet");
+        if (Bank.bankAccounts.containsKey(accountNumber)) {
+            return Bank.bankAccounts.get(accountNumber).getSuspiciousActivityReport();
+        } else {
+            throw new IllegalArgumentException("Account does not exist");
+        }
     }
 
 }
