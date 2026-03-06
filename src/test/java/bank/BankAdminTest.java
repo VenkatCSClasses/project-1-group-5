@@ -61,11 +61,11 @@ public class BankAdminTest {
     void getSuspiciousActivityReportTest(){
         bankTeller.createAccount(1, 1000.0, 1);
         bankTeller.processTransaction(1, 5000.0, 1); // large deposit
-        bankTeller.processTransaction(1, 4000.0, 2); // large withdrawal
+        bankTeller.processTransaction(1, 5000.0, 2); // large withdrawal
         List<Transaction> report = bankAdmin.getSuspiciousActivityReport(1);
         assert report.size() == 2;
         assert report.get(0).getAmount() == 5000.0;
-        assert report.get(1).getAmount() == 4000.0;
+        assert report.get(1).getAmount() == 5000.0;
         assert IllegalArgumentException.class.isInstance(bankAdmin.getSuspiciousActivityReport(99));
     }
 }

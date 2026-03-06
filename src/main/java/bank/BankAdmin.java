@@ -3,7 +3,7 @@ import java.util.List;
 
 public class BankAdmin {
     public void createAccount(String accountHolderName, double initialDeposit, int accountType){
-        throw new IllegalArgumentException("Not implemented yet");
+        BankAccount newAccount = new BankAccount(accountHolderName, initialDeposit, accountType);
     }
 
     public void closeAccount(int accountNumber){
