@@ -15,6 +15,9 @@ public interface BankAccount {
 
     List<Transaction> getTransactionHistory();
 
+    boolean isFrozen();
+    
+
 
 
 
