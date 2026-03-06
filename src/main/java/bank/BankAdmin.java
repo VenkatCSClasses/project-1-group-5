@@ -2,8 +2,8 @@ package bank;
 import java.util.List;
 
 public class BankAdmin {
-    public void createAccount(String accountHolderName, double initialDeposit, int accountType){
-        BankAccount newAccount = new BankAccount(accountHolderName, initialDeposit, accountType);
+    public void createAccount(int customerID, double initialDeposit, int accountType){
+        BankAccount newAccount = new BankAccount(customerID, initialDeposit, accountType);
     }
 
     public void closeAccount(int accountNumber){

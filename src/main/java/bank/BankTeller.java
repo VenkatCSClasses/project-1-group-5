@@ -1,8 +1,8 @@
 package bank;
 
 public class BankTeller{
-    public void createAccount(int customerNumber, double initialDeposit, int accountType){
-        BankAccount newAccount = new BankAccount(accountHolderName, initialDeposit, accountType);
+    public void createAccount(int customerID, double initialDeposit, int accountType){
+        BankAccount newAccount = new BankAccount(customerID, initialDeposit, accountType);
     }
 
     public void closeAccount(int accountNumber){
