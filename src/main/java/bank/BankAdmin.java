@@ -7,7 +7,11 @@ public class BankAdmin {
     }
 
     public void closeAccount(int accountNumber){
-       Bank.bankAccounts.remove(accountNumber);
+        if (Bank.bankAccounts.containsKey(accountNumber)) {
+            Bank.bankAccounts.remove(accountNumber);
+        } else {
+            throw new IllegalArgumentException("Account does not exist");
+        }
     }
 
     public void processTransaction(int accountNumber, double amount, int transactionType){
