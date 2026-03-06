@@ -29,7 +29,12 @@ public class BankAdmin {
     }
 
     public void toggleFreezeAccount(int accountNumber){
-        throw new IllegalArgumentException("Not implemented yet");
+        if (Bank.bankAccounts.containsKey(accountNumber)) {
+            BankAccount account = Bank.bankAccounts.get(accountNumber);
+            account.isFrozen = !account.isFrozen;
+        } else {
+            throw new IllegalArgumentException("Account does not exist");
+        }
     }
 
     public List<Transaction> getSuspiciousActivityReport(int accountNumber){
