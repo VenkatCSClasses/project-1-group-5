@@ -24,6 +24,26 @@ public class Transaction {
         return this.suspiciousActivity ? 1 : 0;
     }
 
+    public boolean getTransactionSuspiciousActivity(){
+        return this.suspiciousActivity ;
+    }
+
+    public int getTimestamp(){
+        return this.timestamp;
+    }
+
+    public String getType(){
+        return this.type;
+    }
+
+    public double getAmount(){
+        return this.amount;
+    }
+
+    public boolean getStatus(){
+        return this.status;
+    }
+
     public String toString(){
         return "Transaction ID: " + this.transactionID + ", Timestamp: " + this.timestamp + ", Type: " + this.type + ", Amount: $" + String.format("%.2f", this.amount) + ", Status: " + this.status + ", Suspicious Activity: " + this.suspiciousActivity;
     }

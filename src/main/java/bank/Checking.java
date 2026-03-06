@@ -7,7 +7,7 @@ public class Checking implements BankAccount {
     int accountNum;
     double balance;
     boolean isFrozen;
-    List<Transaction> transactionHistory;
+    List<Transaction> transactionHistory ;
     List<Transaction> suspiciousActivity;
 
     public Checking(int customerID, double balance){
@@ -22,6 +22,8 @@ public class Checking implements BankAccount {
 
         //generate unique account number
         this.accountNum = (int) (Math.random() * 1000000);
+        this.transactionHistory = new java.util.ArrayList<Transaction>();
+        this.suspiciousActivity = new java.util.ArrayList<Transaction>();
     }
 
     @Override
@@ -117,8 +119,6 @@ public class Checking implements BankAccount {
             this.balance -= amount;
         }
 
-
-
     }
 
     @Override
@@ -176,7 +176,7 @@ public class Checking implements BankAccount {
 
     @Override
     public List<Transaction> getSuspiciousActivity() {
-        return this.suspiciousActivity;2 
+        return this.suspiciousActivity; 
     }
 
     @Override
