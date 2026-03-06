@@ -3,18 +3,16 @@ package bank;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Customer implements UserInterface {
+public class Customer {
     
     private String username;
     private int userID;
-    private int accountNum;
     private int pin;
     List<BankAccount> accounts;
 
-    public Customer(String username, int userID, int accountNum, int pin){
+    public Customer(String username, int userID, int pin){
         this.username = username;
         this.userID = userID;
-        this.accountNum = accountNum;
         this.pin = pin;
         this.accounts = new ArrayList<>();
     }
@@ -25,10 +23,6 @@ public class Customer implements UserInterface {
     
     public int getUserID() {
         return userID;
-    }
-
-    public int getAccountNum() {
-        return accountNum;
     }
 
     public int getPin() {
@@ -54,8 +48,7 @@ public class Customer implements UserInterface {
         if (amount < 0) {
             throw new IllegalArgumentException("Amount cannot be negative.");
         }
-        Atm atm = new Atm("Main Street", 10);
-        atm.processTransaction(account, amount, transactionType);
+        Atm.processTransaction(account, amount, transactionType);
     }
 
     //get total balance for a specific account number, which is associated with the bankAccount
@@ -77,14 +70,14 @@ public class Customer implements UserInterface {
     public String getAccountDetails(){
         String accountNums = "";
         if (accounts.size()==0) {
-            return "Username: " + username + ", UserID: " + userID + ", AccountNum: " + accountNum + ", Accounts: []";
+            return "Username: " + username + ", UserID: " + userID + ", Accounts: []";
         }
         else
         {
             for (BankAccount account : accounts) {
                 accountNums += account.getAccountNumber() + ", ";
             }
-            return "Username: " + username + ", UserID: " + userID + ", AccountNum: " + accountNum + ", Accounts: [" + accountNums.substring(0, accountNums.length() - 2) + "]";
+            return "Username: " + username + ", UserID: " + userID + ", Accounts: [" + accountNums.substring(0, accountNums.length() - 2) + "]";
         }
     }
 

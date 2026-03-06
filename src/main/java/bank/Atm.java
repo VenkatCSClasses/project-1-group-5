@@ -25,8 +25,8 @@ public class Atm {
         }
     }
 
-    //does the deposit, withdraw, transfer
-    public void processTransaction(BankAccount account, double amount, int transactionType){
+    //does the deposit, withdraw
+    public static void processTransaction(BankAccount account, double amount, int transactionType){
         if (transactionType == 0) {
             account.withdraw(amount);
         } else if (transactionType == 1) {

@@ -11,7 +11,7 @@ public class AtmTest {
 
     @Test
     void validateCredentialsTest(){
-        Customer customer = new Customer("Dena", 12345, 67890, 1234);
+        Customer customer = new Customer("Dena", 12345, 1234);
         //valid credentials
         boolean result1 = atm.validateCredentials(12345, 1234);
         assert(result1);
@@ -32,7 +32,7 @@ public class AtmTest {
     @Test
     void processTransactionTest(){
         BankTeller bankTeller = new BankTeller();
-        Customer customer = new Customer("Dena", 12345, 67890, 1234);
+        Customer customer = new Customer("Dena", 12345, 1234);
         bankTeller.createAccount("Dena", 1000.0, 1);
         atm.processTransaction(67890, 500.0, 1); // deposit
         assertEquals(1500.0, customer.checkBalance(67890));
