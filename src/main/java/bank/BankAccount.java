@@ -3,6 +3,8 @@ import java.util.List;
 
 
 public interface BankAccount {
+
+
     void deposit(double amount);
 
     void withdraw(double amount);
@@ -14,6 +16,11 @@ public interface BankAccount {
     List<Transaction> getSuspiciousActivity();
 
     List<Transaction> getTransactionHistory();
+
+    boolean isFrozen();
+
+    String toString();
+    
 
 
 
