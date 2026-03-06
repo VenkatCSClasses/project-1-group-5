@@ -21,7 +21,11 @@ public class BankAdmin {
     }
 
     public double calculateTotalAssets(){
-        throw new IllegalArgumentException("Not implemented yet");
+        double totalAssets = 0;
+        for (BankAccount account : Bank.bankAccounts.values()) {
+            totalAssets += account.getBalance();
+        }
+        return totalAssets;
     }
 
     public void toggleFreezeAccount(int accountNumber){
