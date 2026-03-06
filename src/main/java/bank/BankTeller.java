@@ -3,7 +3,6 @@ package bank;
 public class BankTeller{
     public void createAccount(int customerNumber, double initialDeposit, int accountType){
         BankAccount newAccount = new BankAccount(accountHolderName, initialDeposit, accountType);
-        Bank.bankAccounts.put(newAccount.getAccountNumber(), newAccount);
     }
 
     public void closeAccount(int accountNumber){
