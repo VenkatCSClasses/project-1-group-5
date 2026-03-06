@@ -47,14 +47,14 @@ public class BankTest {
     @Test
     public void testTotalCashUpdatesWhenAccountIsCreated() {
         double initialCash = bank.getTotalCash();
-        BankAccount account4 = new Checking(1, 1001, 100.0, bank);
+        account4 = new Checking(100.0);
         assertEquals(initialCash + 100.0, bank.getTotalCash(), 0.01);
     }
     
     @Test
     public void testTotalCashUpdatesAfterTransaction() {
-        BankAccount account1 = new Checking(1, 1001, 500.0,bank);
-        BankAccount account2 = new Savings(1, 2, 2001);
+        Checking account1 = new Checking(500.0);
+        Savings account2 = new Savings(200.0);
         
         double cashBeforeTransaction = bank.getTotalCash();
         account1.withdraw(50.0);
@@ -66,9 +66,9 @@ public class BankTest {
     
     @Test
     public void testMultipleAccountsCreation() {
-        BankAccount account1 = new Checking(bank, 1, 1001, 100.0);
-        BankAccount account2 = new Checking(bank, 2, 1002, 200.0);
-        BankAccount account3 = new Savings(3, 2001, 1550, bank);
+        BankAccount account1 = new Checking(100.0);
+        BankAccount account2 = new Checking(200.0);
+        BankAccount account3 = new Savings(1550.0);
         
         assertEquals(3, bank.getAllAccounts().size());
         assertTrue(bank.getAllAccounts().contains(account1));
@@ -78,13 +78,13 @@ public class BankTest {
     
     @Test
     public void testTotalCashAccuracy() {
-        BankAccount account1 = new Checking(1, 1001, 300.0, bank);
+        BankAccount account1 = new Checking(300.0);
         assertEquals(300.0, bank.getTotalCash(), 0.01);
         
-        BankAccount account2 = new Savings(2, 2001, 250.0, bank);
+        BankAccount account2 = new Savings(250.0);
         assertEquals(550.0, bank.getTotalCash(), 0.01);
         
-        BankAccount account3 = new Checking(3, 1002, 150.0, bank);
+        BankAccount account3 = new Checking(150.0);
         assertEquals(700.0, bank.getTotalCash(), 0.01);
     }
 }

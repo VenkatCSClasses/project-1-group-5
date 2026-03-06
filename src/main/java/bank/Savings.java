@@ -3,10 +3,24 @@ package bank;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.lang.IllegalArgumentException;
+import java.util.concurrent.atomic.AtomicInteger;
+
 // custom exception classes in same package; no import necessary
 
 
 public class Savings extends BankAccount {
+
+    // simple ID generators; sequential but thread-safe
+    private static final AtomicInteger nextAccount = new AtomicInteger(1);
+    private static final AtomicInteger nextCustomer = new AtomicInteger(1);
+
+    private static int generateAccountNum() {
+        return nextAccount.getAndIncrement();
+    }
+
+    private static int generateCustomerID() {
+        return nextCustomer.getAndIncrement();
+    }
 
     // configuration previously provided by Bank: now static values set directly
     private static double savingsAnnualInterestRate = 0.0;
