@@ -11,13 +11,17 @@ public class BankAdmin {
     }
 
     public void processTransaction(int accountNumber, double amount, int transactionType){
-       if transactionType == 1 {
-           Bank.bankAccounts.get(accountNumber).deposit(amount);
-       } else if (transactionType == 2) {
-           Bank.bankAccounts.get(accountNumber).withdraw(amount);
-       } else {
-           throw new IllegalArgumentException("Invalid transaction type");
-       }
+       if (Bank.bankAccounts.containsKey(accountNumber)) {
+            if (transactionType == 1) {
+                Bank.bankAccounts.get(accountNumber).deposit(amount);
+            } else if (transactionType == 2) {
+                Bank.bankAccounts.get(accountNumber).withdraw(amount);
+            } else {
+                throw new IllegalArgumentException("Invalid transaction type");
+            }
+        } else {
+            throw new IllegalArgumentException("Account does not exist");
+        }
     }
 
     public double calculateTotalAssets(){
