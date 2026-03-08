@@ -11,8 +11,8 @@ public class CustomerTest {
     @Test
     void processTransactionTest(){
         Customer customer = new Customer("Dena", 12345, 1234);
-        bankTeller.createAccount("Dena", 1000.0, 1);
-        customer.processTransaction(67890, 500.0, 1); // deposit
+        bankTeller.createAccount(12345, 1000.0, 1);
+        customer.processTransaction(12345, 500.0, 1); // deposit
         assertEquals(1500.0, customer.checkBalance(67890));
         customer.processTransaction(67890, 200.0,0); // withdrawal
         assertEquals(1300.0, customer.checkBalance(67890));
@@ -32,11 +32,12 @@ public class CustomerTest {
     void checkBalanceTest(){
         Customer customer = new Customer("Dena", 12345, 1234);
         assertEquals(0.0, customer.checkBalance(67890));
-        bankTeller.createAccount("Dena", 1000.0, 1);
+        bankTeller.createAccount(12345, 1000.0, 1);
         assertEquals(1000.0, customer.checkBalance(67890));
-        customer.processTransaction(67890, 500.0, 1); // deposit
+        int accountNum = customer.getAccounts().get(0).getAccountNumber();
+        customer.processTransaction(accountNum, 500.0, 1); // deposit
         assertEquals(1500.0, customer.checkBalance(67890));
-        customer.processTransaction(67890, 200.0,0); // withdrawal
+        customer.processTransaction(accountNum, 200.0,0); // withdrawal
         assertEquals(1300.0, customer.checkBalance(67890));
     }
 
@@ -48,11 +49,11 @@ public class CustomerTest {
         assertEquals(expected1, actual1);
 
         Customer customer2 = new Customer("Guy", 54321, 4321);
-        bankTeller.createAccount("Guy", 1000.0, 1);
+        bankTeller.createAccount("54321", 1000.0, 1);
         String expected2 = "Username: Guy, UserID: 54321, Accounts: [98765]";
         String actual2 = customer2.getAccountDetails();
         assertEquals(expected2, actual2);
-        bankTeller.createAccount("Guy", 200, 0);
+        bankTeller.createAccount("54321", 200, 0);
         String expected3 = "Username: Guy, UserID: 54321, Accounts: [98765, 98766]";
         String actual3 = customer2.getAccountDetails();
         assertEquals(expected3, actual3);
