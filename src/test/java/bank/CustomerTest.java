@@ -1,5 +1,7 @@
 package bank;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
+
 import java.lang.IllegalArgumentException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -79,6 +81,27 @@ public class CustomerTest {
         });
         assertThrows(IllegalArgumentException.class, ()-> {
             customer.changePin(5678, -1234); //new pin is negative
+        });
+    }
+
+    @Test
+    void constructorTest(){
+        Customer customer = new Customer("Dena", 12345, 1234);
+        assertEquals("Dena", customer.getUsername());
+        assertEquals(12345, customer.getUserID());
+        assertEquals(1234, customer.getPin());
+        //invalid cases
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Customer("Dena", 54321, 4321); //duplicate username
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Customer("Guy", 12345, 4321); //duplicate userID
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Customer("Dudde", 67890, 123); //pin is not 4 digits
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Customer("Bro", 67891, -1234); //pin is negative
         });
     }
 }
