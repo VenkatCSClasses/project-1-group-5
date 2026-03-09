@@ -14,7 +14,8 @@ import org.junit.jupiter.api.Test;
 public class CheckingTest {
     @Test
     public void testCheckingConstructor(){
-        assertEquals ( new Checking(12345, 0.0), "Customer ID 12345 has a checking account of 0.0 balance");
+        BankAccount  new Checking(12345, 0.0));
+
         assertEquals( new Checking(12345, 100.0), "Customer ID 12345 has a checking account of 100.0 balance");
         assertEquals( new Checking(19837, 100.0), "Customer ID 19837 has a checking account of 100.0 balance");
 
