@@ -6,8 +6,11 @@ import java.util.List;
 
 public class Savings implements BankAccount {
 
+    private static int nextAccountNumber = 1;
+
     private int customerID;
     private int accountNum;
+
     private double balance;
     private boolean isFrozen;
 
@@ -26,7 +29,9 @@ public class Savings implements BankAccount {
         this.balance = balance;
         this.isFrozen = false;
 
-        this.accountNum = (int) (Math.random() * 1000000);
+        this.accountNum = nextAccountNumber;
+        nextAccountNumber++;
+        
         this.transactionHistory = new ArrayList<>();
         this.suspiciousActivity = new ArrayList<>();
 

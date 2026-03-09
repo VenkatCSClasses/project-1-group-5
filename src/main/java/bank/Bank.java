@@ -8,6 +8,7 @@ import java.util.List;
 public class Bank {
 
     private final HashMap<Integer, BankAccount> allAccounts;
+    private final HashMap<Integer, Customer> allCustomers;
     private double totalCash;
 
     private double savingsDailyWithdrawalLimit;
@@ -15,6 +16,7 @@ public class Bank {
 
     public Bank() {
         this.allAccounts = new HashMap<>();
+        this.allCustomers = new HashMap<>();
         this.totalCash = 0.0;
         this.savingsDailyWithdrawalLimit = 0.0;
         this.savingsAnnualInterestRate = 0.0;
@@ -22,6 +24,10 @@ public class Bank {
 
     public List<BankAccount> getAllAccounts() {
         return Collections.unmodifiableList(new ArrayList<>(allAccounts.values()));
+    }
+
+    public List<Customer> getAllCustomers() {
+        return Collections.unmodifiableList(new ArrayList<>(allCustomers.values()));
     }
 
     public double getTotalCash() {
@@ -63,6 +69,30 @@ public class Bank {
         if (removedAccount != null) {
             totalCash -= removedAccount.checkBalance();
         }
+    }
+
+    public void addCustomer(Customer customer) {
+        if (customer == null) {
+            throw new IllegalArgumentException("customer cannot be null");
+        }
+
+        if (customer.getUserID() == null) {
+            throw new IllegalArgumentException("user ID cannot be null");
+        }
+
+        if (allCustomers.containsKey(customer.getUserID())) {
+            throw new IllegalArgumentException("user ID already exists");
+        }
+
+        allCustomers.put(customer.getUserID(), customer);
+    }
+
+    public Customer getCustomer(Integer userID) {
+        if (userID == null) {
+            throw new IllegalArgumentException("user ID cannot be null");
+        }
+
+        return allCustomers.get(userID);
     }
 
     public void setSavingsDailyWithdrawalLimit(double limit) {

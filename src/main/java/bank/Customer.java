@@ -6,13 +6,13 @@ import java.util.List;
 public class Customer {
     
     private String username;
-    private int userID;
+    private Integer userID;
     private int pin;
     List<BankAccount> accounts;
 
 
     public Customer(String username, int userID, int pin){
-        for (Customer customer : Bank.getCustomers()) {
+        for (Customer customer : Bank.getAllCustomers()) {
             if (customer.getUsername().equals(username)) {
                 throw new IllegalArgumentException("Username already exists.");
             }
