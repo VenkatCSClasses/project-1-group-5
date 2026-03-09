@@ -5,10 +5,10 @@ public class BankAdmin {
     public void createAccount(int customerID, double initialDeposit, int accountType){
         if (accountType == 1) {
             Checking newAccount = new Checking(customerID, initialDeposit);
-            Bank.allAccounts.put(newAccount.accountNum, newAccount);
+            Bank.allAccounts.put(newAccount.getAccountNumber(), newAccount);
         } else if (accountType == 2) {
             Savings newAccount = new Savings(customerID, initialDeposit);
-            Bank.allAccounts.put(newAccount.accountNum, newAccount);
+            Bank.allAccounts.put(newAccount.getAccountNumber(), newAccount);
         } else {
             throw new IllegalArgumentException("Invalid account type");
         }
@@ -39,7 +39,7 @@ public class BankAdmin {
     public double calculateTotalAssets(){
         double totalAssets = 0;
         for (BankAccount account : Bank.allAccounts.values()) {
-            totalAssets += account.getBalance();
+            totalAssets += account.checkBalance();
         }
         return totalAssets;
     }
