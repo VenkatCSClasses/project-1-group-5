@@ -173,7 +173,8 @@ public class Checking implements BankAccount {
 
     }
 
-    public double getCustomerID() {
+    @Override
+    public int getCustomerID() {
         return this.customerID;
 
     }
