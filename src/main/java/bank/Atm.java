@@ -13,7 +13,9 @@ public class Atm {
     }
 
     //log in for users, specifically customers but tellers and admins can use this as well
-    public boolean validateCredentials(int customerID, int inputPin){
+    public boolean validateCredentials(int cID, int inputPin){
+        bank.validateCredentials(cID, inputPin);
+        return true;
         
         
 
