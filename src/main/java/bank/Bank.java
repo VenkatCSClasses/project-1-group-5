@@ -31,7 +31,10 @@ public class Bank {
         return Collections.unmodifiableList(new ArrayList<>(instanceAccounts.values()));
     }
 
-  
+    public void createCustomer(String username, int pin){
+        Customer newCustomer = new Customer(username, pin);
+        addCustomer(newCustomer);
+    }
 
     public double getTotalCash() {
         return totalCash;

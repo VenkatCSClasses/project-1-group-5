@@ -15,8 +15,9 @@ public class BankTellerTest {
     @BeforeEach
     void setUp() {
         bank = new Bank();
-        Customer test = new Customer("Test Customer", 1234);
+        bank.createCustomer("Test Customer", 1234);
         bankTeller = new BankTeller("Test Teller", 9087);
+        bank.addCustomer(bankTeller);
         bank.setSavingsAnnualInterestRate(0.365);
         bank.setSavingsDailyWithdrawalLimit(500.0);
     }
@@ -24,7 +25,6 @@ public class BankTellerTest {
     @Test
     void createAccountTest(){
         bankTeller.createAccount(1, 1000.0, 1);
-        assertFalse(bank.getAllAccounts().isEmpty());
         assertEquals(1, bank.getAllAccounts().get(0).getCustomerID());
         assertEquals(1000.0, bank.getAccount(1).checkBalance());
         assertTrue(bank.getAccount(1) instanceof Checking);
