@@ -2,13 +2,20 @@ package bank;
 
 public class BankTeller{
     public void createAccount(int customerID, double initialDeposit, int accountType){
-        BankAccount newAccount = new BankAccount(customerID, initialDeposit, accountType);
-        Bank.addAccount(newAccount);
+        if (accountType == 1) {
+            Checking newAccount = new Checking(customerID, initialDeposit);
+            Bank.addAccount(newAccount);
+        } else if (accountType == 2) {
+            Savings newAccount = new Savings(customerID, initialDeposit);
+            Bank.addAccount(newAccount);
+        } else {
+            throw new IllegalArgumentException("Invalid account type");
+        }
     }
 
     public void closeAccount(int accountNumber){
-       if (Bank.getAllAccounts().containsKey(accountNumber)) {
-            Bank.removeAccount(accountNumber);
+        if (Bank.getAllAccounts().containsKey(accountNumber)) {
+            Bank.allAccounts.remove(accountNumber);
         } else {
             throw new IllegalArgumentException("Account does not exist");
         }

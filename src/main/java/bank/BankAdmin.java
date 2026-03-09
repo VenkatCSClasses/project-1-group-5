@@ -16,7 +16,7 @@ public class BankAdmin {
 
     public void closeAccount(int accountNumber){
         if (Bank.getAllAccounts().containsKey(accountNumber)) {
-            Bank.removeAccount(accountNumber);
+            Bank.allAccounts.remove(accountNumber);
         } else {
             throw new IllegalArgumentException("Account does not exist");
         }
@@ -47,7 +47,11 @@ public class BankAdmin {
     public void toggleFreezeAccount(int accountNumber){
         if (Bank.getAllAccounts().containsKey(accountNumber)) {
             BankAccount account = Bank.getAllAccounts().get(accountNumber);
-            account.toggleFreeze();
+            if (account.isFrozen()) {
+                account.isFrozen();
+            } else {
+                account.isFrozen();
+            }
         } else {
             throw new IllegalArgumentException("Account does not exist");
         }
