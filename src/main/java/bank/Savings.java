@@ -252,7 +252,8 @@ public class Savings implements BankAccount {
         lastInterestAppliedDate = date;
     }
 
-    public double getCustomerID() {
+    @Override
+    public int getCustomerID() {
         return this.customerID;
 
     }
