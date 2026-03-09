@@ -4,25 +4,25 @@ public class Atm {
     
     private String location;
     private int atmID;
+    private Bank bank;
 
-    public Atm(String location, int atmID){
+    public Atm(String location, int atmID, Bank bank) {
         this.location = location;
         this.atmID = atmID;
+        this.bank = bank;
     }
 
     //log in for users, specifically customers but tellers and admins can use this as well
-    public boolean validateCredentials(int userID, int inputPin){
-        if (String.valueOf(inputPin).length() != 4 || inputPin < 0) {
-            throw new IllegalArgumentException("Pin must be a positive 4-digit number.");
-        }
-        // search our static customer registry
-        for (Customer customer : Customer.getAllCustomers()) {
-            if (customer.getUserID() == userID) {
-                return customer.getPin() == inputPin;
-            }
-        }
-        return false;
+    public boolean validateCredentials(int customerID, int inputPin){
+        
+        
+
+
+        
     }
+
+
+
 
     //does the deposit, withdraw
     public static void processTransaction(BankAccount account, double amount, int transactionType){

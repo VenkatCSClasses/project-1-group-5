@@ -1,21 +1,32 @@
 package bank;
 
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import java.lang.IllegalArgumentException;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class BankTellerTest {
 
     private BankTeller bankTeller;
     private Bank bank;    
 
+    @BeforeEach
+    void setUp() {
+        bank = new Bank();
+        bankTeller = new BankTeller();
+        bank.setSavingsAnnualInterestRate(0.365);
+        bank.setSavingsDailyWithdrawalLimit(500.0);
+    }
+
     @Test
     void createAccountTest(){
         bankTeller.createAccount(1, 1000.0, 1);
-        assertEquals(1, bank.getAccountNumber(1).getCustomerNumber());
-        assertEquals(1000.0, bank.getAccount(1).getBalance());
-        assertEquals(1, bank.getAccount(1).getAccountType());
+        assertFalse(bank.getAllAccounts().isEmpty());
+        assertEquals(1, bank.getAllAccounts().get(0).getCustomerID());
+        assertEquals(1000.0, bank.getAccount(1).checkBalance());
+        assertTrue(bank.getAccount(1) instanceof Checking);
         assertFalse(bank.getAccount(1).isFrozen());
         assertThrows(IllegalArgumentException.class, () -> bankTeller.createAccount(0, 1000.0, 1));
         assertThrows(IllegalArgumentException.class, () -> bankTeller.createAccount(1, -1000.0, 1));
@@ -34,9 +45,9 @@ public class BankTellerTest {
     void processTransactionTest(){
         bankTeller.createAccount(1, 1000.0, 1);
         bankTeller.processTransaction(1, 500.0, 1); // deposit
-        assert bank.getAccount(1).getBalance() == 1500.0;
+        assert bank.getAccount(1).checkBalance() == 1500.0;
         bankTeller.processTransaction(1, 200.0, 2); // withdrawal
-        assert bank.getAccount(1).getBalance() == 1300.0;
+        assert bank.getAccount(1).checkBalance() == 1300.0;
         assertThrows(IllegalArgumentException.class, () -> bankTeller.processTransaction(99, 100.0, 1));
         assertThrows(IllegalArgumentException.class, () -> bankTeller.processTransaction(1, -100.0, 1));
         assertThrows(IllegalArgumentException.class, () -> bankTeller.processTransaction(1, 100.0, 99));

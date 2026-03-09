@@ -1,7 +1,7 @@
 package bank;
 import java.util.List;
 
-public class BankAdmin {
+public class BankAdmin extends Customer{
     public void createAccount(int customerID, double initialDeposit, int accountType){
         if (accountType == 1) {
             Checking newAccount = new Checking(customerID, initialDeposit);

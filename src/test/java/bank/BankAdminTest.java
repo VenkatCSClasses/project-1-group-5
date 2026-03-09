@@ -1,8 +1,7 @@
 package bank;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
-import java.lang.IllegalArgumentException;
-import java.util.List;
 
 public class BankAdminTest {
     private BankTeller bankTeller;
@@ -33,9 +32,7 @@ public class BankAdminTest {
     @Test
     void processTransactionTest(){
         // purposely minimal; just make sure method compiles and throws appropriately
-        assert org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> {
-            bankTeller.processTransaction(99, 100.0, 1);
-        });
+        assertThrows(IllegalArgumentException.class, () -> {bankTeller.processTransaction(99, 100.0, 1);});
     }
 
     @Test
