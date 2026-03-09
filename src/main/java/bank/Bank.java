@@ -4,18 +4,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 public class Bank {
 
-    public final HashMap<String, BankAccount> allAccounts;
+    public final HashMap<Integer, BankAccount> allAccounts;
     public double totalCash;
 
     public double savingsDailyWithdrawalLimit;
     public double savingsAnnualInterestRate;
 
     public Bank() {
-        this.allAccounts = new HashMap<String, BankAccount>();
+        this.allAccounts = new HashMap<Integer, BankAccount>();
         this.totalCash = 0.0;
         this.savingsDailyWithdrawalLimit = 0.0;
         this.savingsAnnualInterestRate = 0.0;
