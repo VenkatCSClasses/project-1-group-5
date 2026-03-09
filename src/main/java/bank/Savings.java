@@ -1,58 +1,76 @@
 package bank;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.lang.IllegalArgumentException;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.HashSet;
+import java.util.Set;
 
-// custom exception classes in same package; no import necessary
+public class Savings implements BankAccount {
+    int customerID;
+    int accountNum;
+    double balance;
+    boolean isFrozen;
 
+    Set<Transaction> transactionHistory;
+    Set<Transaction> suspiciousActivity;
 
-public class Savings extends BankAccount {
+    private final Bank bank;
 
-    // simple ID generators; sequential but thread-safe
-    private static final AtomicInteger nextAccount = new AtomicInteger(1);
-    private static final AtomicInteger nextCustomer = new AtomicInteger(1);
-
-    private static int generateAccountNum() {
-        return nextAccount.getAndIncrement();
-    }
-
-    private static int generateCustomerID() {
-        return nextCustomer.getAndIncrement();
-    }
-
-    // configuration previously provided by Bank: now static values set directly
     private static double savingsAnnualInterestRate = 0.0;
     private static double savingsDailyWithdrawalLimit = Double.MAX_VALUE;
 
     private LocalDate lastInterestAppliedDate;
-
     private LocalDate lastWithdrawalDate;
     private double withdrawnToday;
 
-    /**
-     * Create a savings account with a randomly generated customer & account ID
-     * and zero opening balance.
-     */
-    public Savings() {
-        this(0.0);
-    }
+    public Savings(int customerID, double balance, Bank bank) {
+        if (bank == null) {
+            throw new IllegalArgumentException("bank cannot be null");
+        }
 
-    /**
-     * Create a savings account with a randomly generated IDs and the given
-     * starting balance.
-     */
-    public Savings(double startingBalance) {
-        super(generateCustomerID(), generateAccountNum(), startingBalance);
+        this.customerID = customerID;
+        this.balance = balance;
+        this.bank = bank;
+        this.isFrozen = false;
+
+        this.accountNum = (int) (Math.random() * 1000000);
+        this.transactionHistory = new HashSet<>();
+        this.suspiciousActivity = new HashSet<>();
+
         this.lastInterestAppliedDate = null;
         this.lastWithdrawalDate = null;
         this.withdrawnToday = 0.0;
+
+        this.bank.registerInitialBalance(balance);
     }
 
-    // -------------------------
-    // Withdraw
-    // -------------------------
+    @Override
+    public void deposit(double amount) {
+        if (amount <= 0) {
+            Transaction newTransaction = new Transaction(
+                    (int) (Math.random() * 1000000),
+                    (int) (System.currentTimeMillis() / 1000),
+                    "Deposit",
+                    amount,
+                    false,
+                    false
+            );
+            this.transactionHistory.add(newTransaction);
+            throw new IllegalArgumentException("Deposit amount must be greater than 0!");
+        }
+
+        this.balance += amount;
+        this.bank.adjustTotalCash(amount);
+
+        Transaction newTransaction = new Transaction(
+                (int) (Math.random() * 1000000),
+                (int) (System.currentTimeMillis() / 1000),
+                "Deposit",
+                amount,
+                true,
+                false
+        );
+        this.transactionHistory.add(newTransaction);
+    }
 
     @Override
     public void withdraw(double amount) {
@@ -60,125 +78,208 @@ public class Savings extends BankAccount {
     }
 
     public void withdraw(double amount, LocalDate date) {
-        if (date == null) throw new IllegalArgumentException("date cannot be null");
-
-        ensurePositiveAmount(amount);
-        ensureNotFrozen();
-
-        resetDailyIfNewDay(date);
-        ensureWithinDailyLimit(amount);
-        ensureSufficientFunds(amount);
-
-        // Actually move money
-        // BankAccount.withdraw already subtracts from balance.
-        super.withdraw(amount);
-
-        withdrawnToday += amount;
-        lastWithdrawalDate = date;
-
-        // Transactions not asserted by the provided tests; keep as hook if you track history.
-        // recordSavingsTransaction("WITHDRAW", amount, false);
-    }
-
-    // -------------------------
-    // Transfer (counts toward daily limit)
-    // -------------------------
-
-    @Override
-    public void transfer(BankAccount target, double amount) {
-        transfer(target, amount, LocalDate.now());
-    }
-
-    public void transfer(BankAccount target, double amount, LocalDate date) {
-        if (target == null) throw new IllegalArgumentException("target cannot be null");
-        if (date == null) throw new IllegalArgumentException("date cannot be null");
-
-        ensurePositiveAmount(amount);
-        ensureNotFrozen();
-
-        resetDailyIfNewDay(date);
-        ensureWithinDailyLimit(amount);
-        ensureSufficientFunds(amount);
-
-        // Withdraw from this savings (will also enforce any base BankAccount rules)
-        super.withdraw(amount);
-
-        // Deposit into target
-        target.deposit(amount);
-
-        withdrawnToday += amount;
-        lastWithdrawalDate = date;
-
-        // recordSavingsTransaction("TRANSFER_OUT", amount, false);
-    }
-
-    // -------------------------
-    // Daily interest (once per day)
-    // -------------------------
-
-    public void compoundDailyInterest(LocalDate date) {
-        if (date == null) throw new IllegalArgumentException("date cannot be null");
-
-        if (lastInterestAppliedDate != null && lastInterestAppliedDate.equals(date)) {
-            return; // already applied today
+        if (date == null) {
+            throw new IllegalArgumentException("date cannot be null");
         }
 
-        double dailyRate = getDailyInterestRate(); // APR/365
-        double interest = checkBalance() * dailyRate;
+        if (amount <= 0) {
+            Transaction newTransaction = new Transaction(
+                    (int) (Math.random() * 1000000),
+                    (int) (System.currentTimeMillis() / 1000),
+                    "Withdrawal",
+                    amount,
+                    false,
+                    false
+            );
+            this.transactionHistory.add(newTransaction);
+            throw new IllegalArgumentException("Withdrawal amount must be greater than 0!");
+        }
 
-        // Apply interest by depositing (keeps balance updates centralized in BankAccount)
+        if (this.balance < amount) {
+            Transaction newTransaction = new Transaction(
+                    (int) (Math.random() * 1000000),
+                    (int) (System.currentTimeMillis() / 1000),
+                    "Withdrawal",
+                    amount,
+                    false,
+                    false
+            );
+            this.transactionHistory.add(newTransaction);
+            throw new IllegalArgumentException("Insufficient funds!");
+        }
+
+        if (this.lastWithdrawalDate == null || !this.lastWithdrawalDate.equals(date)) {
+            this.withdrawnToday = 0.0;
+            this.lastWithdrawalDate = date;
+        }
+
+        if (this.withdrawnToday + amount > savingsDailyWithdrawalLimit) {
+            Transaction newTransaction = new Transaction(
+                    (int) (Math.random() * 1000000),
+                    (int) (System.currentTimeMillis() / 1000),
+                    "Withdrawal",
+                    amount,
+                    false,
+                    true
+            );
+            this.transactionHistory.add(newTransaction);
+            this.suspiciousActivity.add(newTransaction);
+            throw new IllegalArgumentException("Daily withdrawal limit exceeded!");
+        }
+
+        this.balance -= amount;
+        this.withdrawnToday += amount;
+        this.lastWithdrawalDate = date;
+        this.bank.adjustTotalCash(-amount);
+
+        Transaction newTransaction = new Transaction(
+                (int) (Math.random() * 1000000),
+                (int) (System.currentTimeMillis() / 1000),
+                "Withdrawal",
+                amount,
+                true,
+                false
+        );
+        this.transactionHistory.add(newTransaction);
+    }
+
+    @Override
+    public void transfer(BankAccount targetAccount, double amount) {
+        transfer(targetAccount, amount, LocalDate.now());
+    }
+
+    public void transfer(BankAccount targetAccount, double amount, LocalDate date) {
+        if (targetAccount == null) {
+            throw new IllegalArgumentException("Target account cannot be null!");
+        }
+
+        if (date == null) {
+            throw new IllegalArgumentException("date cannot be null");
+        }
+
+        if (amount <= 0) {
+            Transaction newTransaction = new Transaction(
+                    (int) (Math.random() * 1000000),
+                    (int) (System.currentTimeMillis() / 1000),
+                    "Transfer",
+                    amount,
+                    false,
+                    false
+            );
+            this.transactionHistory.add(newTransaction);
+            throw new IllegalArgumentException("Transfer amount must be greater than 0!");
+        }
+
+        if (this.balance < amount) {
+            Transaction newTransaction = new Transaction(
+                    (int) (Math.random() * 1000000),
+                    (int) (System.currentTimeMillis() / 1000),
+                    "Transfer",
+                    amount,
+                    false,
+                    false
+            );
+            this.transactionHistory.add(newTransaction);
+            throw new IllegalArgumentException("Insufficient funds!");
+        }
+
+        if (this.lastWithdrawalDate == null || !this.lastWithdrawalDate.equals(date)) {
+            this.withdrawnToday = 0.0;
+            this.lastWithdrawalDate = date;
+        }
+
+        if (this.withdrawnToday + amount > savingsDailyWithdrawalLimit) {
+            Transaction newTransaction = new Transaction(
+                    (int) (Math.random() * 1000000),
+                    (int) (System.currentTimeMillis() / 1000),
+                    "Transfer",
+                    amount,
+                    false,
+                    true
+            );
+            this.transactionHistory.add(newTransaction);
+            this.suspiciousActivity.add(newTransaction);
+            throw new IllegalArgumentException("Daily withdrawal limit exceeded!");
+        }
+
+        this.balance -= amount;
+        this.withdrawnToday += amount;
+        this.lastWithdrawalDate = date;
+
+        // money leaves this account's bank first
+        this.bank.adjustTotalCash(-amount);
+
+        // target deposit will add to its own bank
+        targetAccount.deposit(amount);
+
+        Transaction newTransaction = new Transaction(
+                (int) (Math.random() * 1000000),
+                (int) (System.currentTimeMillis() / 1000),
+                "Transfer",
+                amount,
+                true,
+                false
+        );
+        this.transactionHistory.add(newTransaction);
+    }
+
+    public void compoundDailyInterest(LocalDate date) {
+        if (date == null) {
+            throw new IllegalArgumentException("date cannot be null");
+        }
+
+        if (lastInterestAppliedDate != null && lastInterestAppliedDate.equals(date)) {
+            return;
+        }
+
+        double dailyRate = savingsAnnualInterestRate / 365.0;
+        double interest = this.balance * dailyRate;
+
         if (interest != 0.0) {
-            super.deposit(interest);
+            this.balance += interest;
+            this.bank.adjustTotalCash(interest);
+
+            Transaction newTransaction = new Transaction(
+                    (int) (Math.random() * 1000000),
+                    (int) (System.currentTimeMillis() / 1000),
+                    "Interest",
+                    interest,
+                    true,
+                    false
+            );
+            this.transactionHistory.add(newTransaction);
         }
 
         lastInterestAppliedDate = date;
-
-        // recordSavingsTransaction("INTEREST", interest, false);
     }
 
-    // -------------------------
-    // Helpers
-    // -------------------------
-
-    private void resetDailyIfNewDay(LocalDate date) {
-        if (lastWithdrawalDate == null || !lastWithdrawalDate.equals(date)) {
-            withdrawnToday = 0.0;
-            lastWithdrawalDate = date;
-        }
+    @Override
+    public double checkBalance() {
+        return this.balance;
     }
 
-    private void ensureNotFrozen() {
-        // Assumes BankAccount has isFrozen() and freeze()
-        if (isFrozen()) {
-            throw new IllegalStateException("Account is frozen");
-        }
+    @Override
+    public java.util.List<Transaction> getSuspiciousActivity() {
+        return new java.util.ArrayList<>(this.suspiciousActivity);
     }
 
-    private void ensurePositiveAmount(double amount) {
-        if (amount <= 0.0) {
-            throw new IllegalArgumentException("amount must be > 0");
-        }
+    @Override
+    public java.util.List<Transaction> getTransactionHistory() {
+        return new java.util.ArrayList<>(this.transactionHistory);
     }
 
-    private void ensureSufficientFunds(double amount) {
-        // Ensures SavingsTest expects InsufficientFundsException on overdraft attempts
-        if (checkBalance() < amount) {
-            throw new InsufficientFundsException("Insufficient funds");
-        }
+    @Override
+    public boolean isFrozen() {
+        return this.isFrozen;
     }
 
-    private void ensureWithinDailyLimit(double amount) {
-        double limit = savingsDailyWithdrawalLimit;
-        if (withdrawnToday + amount > limit) {
-            throw new DailyLimitExceededException("Daily withdrawal limit exceeded");
-        }
+    @Override
+    public String toString() {
+        return "Savings Account - Customer ID: " + this.customerID
+                + ", Balance: $" + String.format("%.2f", this.balance)
+                + ", Frozen: " + this.isFrozen;
     }
 
-    private static double getDailyInterestRate() {
-        return savingsAnnualInterestRate / 365.0;
-    }
-
-    // configuration helpers used in tests or bank helper
     public static void setSavingsAnnualInterestRate(double rate) {
         savingsAnnualInterestRate = rate;
     }
@@ -187,21 +288,11 @@ public class Savings extends BankAccount {
         savingsDailyWithdrawalLimit = limit;
     }
 
+    public static double getSavingsAnnualInterestRate() {
+        return savingsAnnualInterestRate;
+    }
+
     public static double getSavingsDailyWithdrawalLimit() {
         return savingsDailyWithdrawalLimit;
     }
-
-    @SuppressWarnings("unused")
-    private void recordSavingsTransaction(String type, double amount, boolean suspiciousActivity) {
-        // Not required for the provided tests.
-        // If your BankAccount exposes something like addTransaction(...), call it here.
-    }
-
-    // -------------------------
-    // Getters
-    // -------------------------
-
-    public LocalDate getLastInterestAppliedDate() { return lastInterestAppliedDate; }
-    public LocalDate getLastWithdrawalDate() { return lastWithdrawalDate; }
-    public double getWithdrawnToday() { return withdrawnToday; }
 }
