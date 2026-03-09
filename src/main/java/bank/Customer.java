@@ -3,29 +3,25 @@ package bank;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Collections;
 
 public class Customer {
-    
     private String username;
-<<<<<<< HEAD
-    private Integer userID;
-=======
->>>>>>> 13bb98cdbd82ca1672e06b4fb63478c828c26bce
     private int pin;
     private int userType; // 0 for customer, 1 for teller, 2 for admin
     private int userID;
     private HashMap<Integer, BankAccount> accounts;
 
-<<<<<<< HEAD
+    // keep a static registry so we can enforce uniqueness
+    private static final List<Customer> allCustomers = new ArrayList<>();
 
-    public Customer(String username, int userID, int pin){
-        for (Customer customer : Bank.getAllCustomers()) {
-=======
-    public Customer(String username, int pin, int userType){
-        for (Customer customer : Bank.getCustomers()) {
->>>>>>> 13bb98cdbd82ca1672e06b4fb63478c828c26bce
+    public Customer(String username, int userID, int pin) {
+        for (Customer customer : allCustomers) {
             if (customer.getUsername().equals(username)) {
                 throw new IllegalArgumentException("Username already exists.");
+            }
+            if (customer.getUserID() == userID) {
+                throw new IllegalArgumentException("UserID already exists.");
             }
         }
         if (String.valueOf(pin).length() != 4) {
@@ -35,12 +31,20 @@ public class Customer {
             throw new IllegalArgumentException("Pin cannot be negative.");
         }
         this.username = username;
-        this.userType = userType;
+        this.userType = 0; // default to customer
         this.pin = pin;
-        this.userID = Bank.getCustomerCount();
+        this.userID = userID;
         this.accounts = new HashMap<Integer, BankAccount>();
+        allCustomers.add(this);
     }
 
+    public static List<Customer> getAllCustomers() {
+        return Collections.unmodifiableList(allCustomers);
+    }
+
+    public static int getCustomerCount() {
+        return allCustomers.size();
+    }
     public String getUsername() {
         return username;
     }

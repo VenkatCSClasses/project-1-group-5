@@ -12,10 +12,10 @@ public class AtmTest {
     @Test
     void validateCredentialsTest(){
         Customer customer = new Customer("Dena", 12345, 1234);
-        //valid credentials
+        // valid credentials
         boolean result1 = atm.validateCredentials(12345, 1234);
         assert(result1);
-        //invalid credentials
+        // invalid credentials
         boolean result2 = atm.validateCredentials(12345, 4321);
         assert(!result2);
         assertThrows(IllegalArgumentException.class, () -> {
@@ -33,11 +33,13 @@ public class AtmTest {
     void processTransactionTest(){
         BankTeller bankTeller = new BankTeller();
         Customer customer = new Customer("Dena", 12345, 1234);
-        bankTeller.createAccount("Dena", 1000.0, 1);
-        atm.processTransaction(67890, 500.0, 1); // deposit
-        assertEquals(1500.0, customer.checkBalance(67890));
-        atm.processTransaction(67890, 200.0,0); // withdrawal
-        assertEquals(1300.0, customer.checkBalance(67890));
+        bankTeller.createAccount(12345, 1000.0, 1);
+        // get the generated account number from customer
+        int accountNum = customer.getAccounts().values().iterator().next().getAccountNumber();
+        atm.processTransaction(accountNum, 500.0, 1); // deposit
+        assertEquals(1500.0, customer.checkBalance(accountNum));
+        atm.processTransaction(accountNum, 200.0,0); // withdrawal
+        assertEquals(1300.0, customer.checkBalance(accountNum));
         //invalid cases
         assertThrows(IllegalArgumentException.class, () -> {
             atm.processTransaction(11111, 100.0, 1); //different account number

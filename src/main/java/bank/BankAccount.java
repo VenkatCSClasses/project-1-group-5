@@ -19,6 +19,11 @@ public interface BankAccount {
 
     boolean isFrozen();
 
+    /**
+     * Set the frozen state of the account. Added to support admin actions.
+     */
+    void setFrozen(boolean frozen);
+
     String toString();
 
     Integer getAccountNumber();

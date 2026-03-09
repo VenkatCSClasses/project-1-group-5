@@ -7,34 +7,47 @@ import java.util.List;
 
 public class Bank {
 
-    private final HashMap<Integer, BankAccount> allAccounts;
-    private final HashMap<Integer, Customer> allCustomers;
+    // static registry used by teller/admin helpers
+    public static HashMap<Integer, BankAccount> allAccounts = new HashMap<>();
+
+    private final HashMap<Integer, BankAccount> instanceAccounts;
+    // private final HashMap<Integer, Customer> allCustomers;
     private double totalCash;
 
     private double savingsDailyWithdrawalLimit;
     private double savingsAnnualInterestRate;
 
     public Bank() {
-        this.allAccounts = new HashMap<>();
-        this.allCustomers = new HashMap<>();
+        // clear static map when new instance is created so that tests start fresh
+        allAccounts.clear();
+        this.instanceAccounts = new HashMap<>();
+        // this.allCustomers = new HashMap<>();
         this.totalCash = 0.0;
         this.savingsDailyWithdrawalLimit = 0.0;
         this.savingsAnnualInterestRate = 0.0;
     }
 
     public List<BankAccount> getAllAccounts() {
-        return Collections.unmodifiableList(new ArrayList<>(allAccounts.values()));
+        return Collections.unmodifiableList(new ArrayList<>(instanceAccounts.values()));
     }
 
-    public List<Customer> getAllCustomers() {
-        return Collections.unmodifiableList(new ArrayList<>(allCustomers.values()));
-    }
+    // public List<Customer> getAllCustomers() {
+    //     return Collections.unmodifiableList(new ArrayList<>(allCustomers.values()));
+    // }
 
     public double getTotalCash() {
         return totalCash;
     }
 
     public void addAccount(BankAccount account) {
+        // delegate to static registry so that teller/admin helpers work
+        addAccountStatic(account);
+        // keep instance state in sync as well
+        instanceAccounts.put(account.getAccountNumber(), account);
+        totalCash += account.checkBalance();
+    }
+
+    public static void addAccountStatic(BankAccount account) {
         if (account == null) {
             throw new IllegalArgumentException("account cannot be null");
         }
@@ -48,10 +61,17 @@ public class Bank {
         }
 
         allAccounts.put(account.getAccountNumber(), account);
-        totalCash += account.checkBalance();
     }
 
     public BankAccount getAccount(Integer accountNumber) {
+        if (accountNumber == null) {
+            throw new IllegalArgumentException("account number cannot be null");
+        }
+
+        return instanceAccounts.get(accountNumber);
+    }
+
+    public static BankAccount getAccountStatic(Integer accountNumber) {
         if (accountNumber == null) {
             throw new IllegalArgumentException("account number cannot be null");
         }
@@ -64,36 +84,37 @@ public class Bank {
             throw new IllegalArgumentException("account number cannot be null");
         }
 
-        BankAccount removedAccount = allAccounts.remove(accountNumber);
+        BankAccount removedAccount = instanceAccounts.remove(accountNumber);
+        allAccounts.remove(accountNumber);
 
         if (removedAccount != null) {
             totalCash -= removedAccount.checkBalance();
         }
     }
 
-    public void addCustomer(Customer customer) {
-        if (customer == null) {
-            throw new IllegalArgumentException("customer cannot be null");
-        }
+    // public void addCustomer(Customer customer) {
+    //     if (customer == null) {
+    //         throw new IllegalArgumentException("customer cannot be null");
+    //     }
 
-        if (customer.getUserID() == null) {
-            throw new IllegalArgumentException("user ID cannot be null");
-        }
+    //     if (customer.getUserID() == null) {
+    //         throw new IllegalArgumentException("user ID cannot be null");
+    //     }
 
-        if (allCustomers.containsKey(customer.getUserID())) {
-            throw new IllegalArgumentException("user ID already exists");
-        }
+    //     if (allCustomers.containsKey(customer.getUserID())) {
+    //         throw new IllegalArgumentException("user ID already exists");
+    //     }
 
-        allCustomers.put(customer.getUserID(), customer);
-    }
+    //     allCustomers.put(customer.getUserID(), customer);
+    // }
 
-    public Customer getCustomer(Integer userID) {
-        if (userID == null) {
-            throw new IllegalArgumentException("user ID cannot be null");
-        }
+    // public Customer getCustomer(Integer userID) {
+    //     if (userID == null) {
+    //         throw new IllegalArgumentException("user ID cannot be null");
+    //     }
 
-        return allCustomers.get(userID);
-    }
+    //     return allCustomers.get(userID);
+    // }
 
     public void setSavingsDailyWithdrawalLimit(double limit) {
         if (limit < 0) {

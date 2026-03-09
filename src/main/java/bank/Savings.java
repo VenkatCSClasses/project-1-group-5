@@ -271,7 +271,10 @@ public class Savings implements BankAccount {
     public boolean isFrozen() {
         return isFrozen;
     }
-
+    @Override
+    public void setFrozen(boolean frozen) {
+        this.isFrozen = frozen;
+    }
     @Override
     public Integer getAccountNumber() {
         return accountNum;

@@ -15,14 +15,13 @@ public class Atm {
         if (String.valueOf(inputPin).length() != 4 || inputPin < 0) {
             throw new IllegalArgumentException("Pin must be a positive 4-digit number.");
         }
-        Bank bank = Bank.getCustomers().get(userID);
-        if (bank == null) {
-            throw new IllegalArgumentException("User ID not found.");
+        // search our static customer registry
+        for (Customer customer : Customer.getAllCustomers()) {
+            if (customer.getUserID() == userID) {
+                return customer.getPin() == inputPin;
+            }
         }
-        else {
-            Customer customer = bank.getCustomers().get(userID);
-            return customer.getPin() == inputPin;
-        }
+        return false;
     }
 
     //does the deposit, withdraw

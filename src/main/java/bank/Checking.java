@@ -1,6 +1,5 @@
 package bank;
 import java.util.List;
-import Math.random;
 
 public class Checking implements BankAccount {
     int customerID;
@@ -191,9 +190,12 @@ public class Checking implements BankAccount {
     }
 
     @Override
-    public int getAccountNumber() {
+    public void setFrozen(boolean frozen) {
+        this.isFrozen = frozen;
+    }
+    @Override
+    public Integer getAccountNumber() {
         return this.accountNum; 
-        
     }
 
     @Override
