@@ -10,7 +10,7 @@ public class Customer {
     private int pin;
     private int userType; // 0 for customer, 1 for teller, 2 for admin
     private int userID;
-    private ArrayList<BankAccount> accounts;
+    private HashMap<Integer, BankAccount> accounts;
 
     public Customer(String username, int pin, int userType){
         for (Customer customer : Bank.getCustomers()) {
@@ -28,7 +28,7 @@ public class Customer {
         this.userType = userType;
         this.pin = pin;
         this.userID = Bank.getCustomerCount();
-        this.accounts = new ArrayList<BankAccount>();
+        this.accounts = new HashMap<Integer, BankAccount>();
     }
 
     public String getUsername() {
@@ -49,13 +49,7 @@ public class Customer {
 
     // withdraw or deposit amount into given account, transation type = 0 for withdraw, 1 for deposit
     public void processTransaction(int accountNumber, double amount, int transactionType){
-        BankAccount account = null;
-        for (BankAccount acc : accounts) {
-            if (acc.getAccountNumber() == accountNumber) {
-                account = acc;
-                break;
-            }
-        }
+        BankAccount account = accounts.get(accountNumber);
         if (account == null) {
             throw new IllegalArgumentException("Account number not found.");
         }
@@ -71,10 +65,9 @@ public class Customer {
             return 0.00;
         }
         else {
-            for (BankAccount account : accounts) {
-                if (account.getAccountNumber() == accountNum) {
-                    return account.checkBalance();
-                }
+            BankAccount account = accounts.get(accountNum);
+            if (account != null) {
+                return account.checkBalance();
             }
         }
         return 0.00;
@@ -88,7 +81,7 @@ public class Customer {
         }
         else
         {
-            for (BankAccount account : accounts) {
+            for (BankAccount account : accounts.values()) {
                 accountNums += account.getAccountNumber() + ", ";
             }
             return "Username: " + username + ", UserID: " + userID + ", Accounts: [" + accountNums.substring(0, accountNums.length() - 2) + "]";
