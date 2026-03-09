@@ -139,4 +139,12 @@ public class Bank {
     public double getSavingsAnnualInterestRate() {
         return savingsAnnualInterestRate;
     }
+    public boolean validateCredentials(String username, int pin) {
+        for (Customer customer : allCustomers.values()) {
+            if (customer.getUsername().equals(username) && customer.getPin() == pin) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
