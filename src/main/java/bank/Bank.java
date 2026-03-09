@@ -1,71 +1,93 @@
 package bank;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 public class Bank {
 
-    // global state stored as statics
-    static HashMap<Integer, BankAccount> allAccounts;
-    static double totalCash;
-    static double savingsDailyWithdrawalLimit;
-    static double savingsAnnualInterestRate;
+    private final HashMap<Integer, BankAccount> allAccounts;
+    private double totalCash;
+
+    private double savingsDailyWithdrawalLimit;
+    private double savingsAnnualInterestRate;
 
     public Bank() {
-        allAccounts = new HashMap<>();
-        totalCash = 0.0;
-        savingsDailyWithdrawalLimit = 0.0;
-        savingsAnnualInterestRate = 0.0;
+        this.allAccounts = new HashMap<>();
+        this.totalCash = 0.0;
+        this.savingsDailyWithdrawalLimit = 0.0;
+        this.savingsAnnualInterestRate = 0.0;
     }
 
-    public static HashMap<Integer, BankAccount> getAllAccounts() {
-        return allAccounts;
+    public List<BankAccount> getAllAccounts() {
+        return Collections.unmodifiableList(new ArrayList<>(allAccounts.values()));
     }
 
-    public static double getTotalCash() {
+    public double getTotalCash() {
         return totalCash;
     }
 
-    public static void addAccount(BankAccount account) {
+    public void addAccount(BankAccount account) {
         if (account == null) {
             throw new IllegalArgumentException("account cannot be null");
         }
+
+        if (account.getAccountNumber() == null) {
+            throw new IllegalArgumentException("account number cannot be null");
+        }
+
         if (allAccounts.containsKey(account.getAccountNumber())) {
             throw new IllegalArgumentException("account number already exists");
         }
+
         allAccounts.put(account.getAccountNumber(), account);
         totalCash += account.checkBalance();
     }
 
-    public static void setSavingsDailyWithdrawalLimit(double limit) {
+    public BankAccount getAccount(Integer accountNumber) {
+        if (accountNumber == null) {
+            throw new IllegalArgumentException("account number cannot be null");
+        }
+
+        return allAccounts.get(accountNumber);
+    }
+
+    public void removeAccount(Integer accountNumber) {
+        if (accountNumber == null) {
+            throw new IllegalArgumentException("account number cannot be null");
+        }
+
+        BankAccount removedAccount = allAccounts.remove(accountNumber);
+
+        if (removedAccount != null) {
+            totalCash -= removedAccount.checkBalance();
+        }
+    }
+
+    public void setSavingsDailyWithdrawalLimit(double limit) {
         if (limit < 0) {
             throw new IllegalArgumentException("limit cannot be negative");
         }
-        savingsDailyWithdrawalLimit = limit;
+
+        this.savingsDailyWithdrawalLimit = limit;
         Savings.setSavingsDailyWithdrawalLimit(limit);
     }
 
-    public static double getSavingsDailyWithdrawalLimit() {
+    public double getSavingsDailyWithdrawalLimit() {
         return savingsDailyWithdrawalLimit;
     }
 
-    public static void setSavingsAnnualInterestRate(double rate) {
+    public void setSavingsAnnualInterestRate(double rate) {
         if (rate < 0) {
             throw new IllegalArgumentException("rate cannot be negative");
         }
-        savingsAnnualInterestRate = rate;
+
+        this.savingsAnnualInterestRate = rate;
         Savings.setSavingsAnnualInterestRate(rate);
     }
 
-    public static double getSavingsAnnualInterestRate() {
+    public double getSavingsAnnualInterestRate() {
         return savingsAnnualInterestRate;
     }
-
-    static void registerInitialBalance(double startingBalance) {
-        totalCash += startingBalance;
-    }
-
-    static void adjustTotalCash(double delta) {
-        totalCash += delta;
-    }
 }
-

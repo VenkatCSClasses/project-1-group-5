@@ -11,23 +11,19 @@ public class Savings implements BankAccount {
     private double balance;
     private boolean isFrozen;
 
-    private final Bank bank;
-
     private List<Transaction> transactionHistory;
     private List<Transaction> suspiciousActivity;
+
+    private static double savingsAnnualInterestRate = 0.0;
+    private static double savingsDailyWithdrawalLimit = Double.MAX_VALUE;
 
     private LocalDate lastInterestAppliedDate;
     private LocalDate lastWithdrawalDate;
     private double withdrawnToday;
 
-    public Savings(int customerID, double balance, Bank bank) {
-        if (bank == null) {
-            throw new IllegalArgumentException("bank cannot be null");
-        }
-
+    public Savings(int customerID, double balance) {
         this.customerID = customerID;
         this.balance = balance;
-        this.bank = bank;
         this.isFrozen = false;
 
         this.accountNum = (int) (Math.random() * 1000000);
@@ -116,7 +112,7 @@ public class Savings implements BankAccount {
             lastWithdrawalDate = date;
         }
 
-        if (withdrawnToday + amount > bank.getSavingsDailyWithdrawalLimit()) {
+        if (withdrawnToday + amount > savingsDailyWithdrawalLimit) {
             Transaction t = new Transaction(
                     (int) (Math.random() * 1000000),
                     (int) (System.currentTimeMillis() / 1000),
@@ -193,7 +189,7 @@ public class Savings implements BankAccount {
             lastWithdrawalDate = date;
         }
 
-        if (withdrawnToday + amount > bank.getSavingsDailyWithdrawalLimit()) {
+        if (withdrawnToday + amount > savingsDailyWithdrawalLimit) {
             Transaction t = new Transaction(
                     (int) (Math.random() * 1000000),
                     (int) (System.currentTimeMillis() / 1000),
@@ -231,7 +227,7 @@ public class Savings implements BankAccount {
             return;
         }
 
-        double dailyRate = bank.getSavingsAnnualInterestRate() / 365.0;
+        double dailyRate = savingsAnnualInterestRate / 365.0;
         double interest = balance * dailyRate;
 
         if (interest != 0.0) {
@@ -281,5 +277,21 @@ public class Savings implements BankAccount {
         return "Savings Account - Customer ID: " + customerID
                 + ", Balance: $" + String.format("%.2f", balance)
                 + ", Frozen: " + isFrozen;
+    }
+
+    public static void setSavingsAnnualInterestRate(double rate) {
+        savingsAnnualInterestRate = rate;
+    }
+
+    public static void setSavingsDailyWithdrawalLimit(double limit) {
+        savingsDailyWithdrawalLimit = limit;
+    }
+
+    public static double getSavingsAnnualInterestRate() {
+        return savingsAnnualInterestRate;
+    }
+
+    public static double getSavingsDailyWithdrawalLimit() {
+        return savingsDailyWithdrawalLimit;
     }
 }

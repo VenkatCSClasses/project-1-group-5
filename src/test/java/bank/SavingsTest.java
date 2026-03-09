@@ -21,21 +21,25 @@ public class SavingsTest {
         day2 = day1.plusDays(1);
 
         bank = new Bank();
+        bank.setSavingsAnnualInterestRate(0.365);
+        bank.setSavingsDailyWithdrawalLimit(500.0);
 
-        Savings.setSavingsAnnualInterestRate(0.365);
-        Savings.setSavingsDailyWithdrawalLimit(500.0);
+        savings = new Savings(1, 1000.0);
+        savings2 = new Savings(2, 0.0);
 
-        savings = new Savings(1, 1000.0, bank);
-        savings2 = new Savings(2, 0.0, bank);
+        bank.addAccount(savings);
+        bank.addAccount(savings2);
     }
-@Test
-void setupWorks() {
-    assertEquals(1000.0, savings.checkBalance(), 0.000001);
-    assertEquals(0.0, savings2.checkBalance(), 0.000001);
-    assertEquals(1000.0, bank.getTotalCash(), 0.000001);
-}
+
     @Test
-    void withdrawReducesBalancewhenAllowed() {
+    void setupWorks() {
+        assertEquals(1000.0, savings.checkBalance(), 0.000001);
+        assertEquals(0.0, savings2.checkBalance(), 0.000001);
+        assertEquals(1000.0, bank.getTotalCash(), 0.000001);
+    }
+
+    @Test
+    void withdrawReducesBalanceWhenAllowed() {
         savings.withdraw(100.0, day1);
         assertEquals(900.0, savings.checkBalance(), 0.000001);
     }
@@ -54,14 +58,14 @@ void setupWorks() {
     }
 
     @Test
-    void withdrawEnforcesDailyLimitsameDay() {
+    void withdrawEnforcesDailyLimitSameDay() {
         savings.withdraw(300.0, day1);
         assertThrows(IllegalArgumentException.class, () -> savings.withdraw(250.0, day1));
         assertEquals(700.0, savings.checkBalance(), 0.000001);
     }
 
     @Test
-    void dailyLimitresetsOnNewDay() {
+    void dailyLimitResetsOnNewDay() {
         savings.withdraw(500.0, day1);
         assertThrows(IllegalArgumentException.class, () -> savings.withdraw(1.0, day1));
 
@@ -70,27 +74,27 @@ void setupWorks() {
     }
 
     @Test
-    void transfer_movesMoney_whenAllowed() {
+    void transferMovesMoneyWhenAllowed() {
         savings.transfer(savings2, 200.0, day1);
         assertEquals(800.0, savings.checkBalance(), 0.000001);
         assertEquals(200.0, savings2.checkBalance(), 0.000001);
     }
 
     @Test
-    void transfer_throwsIllegalArgumentException_whenTargetNull() {
+    void transferThrowsIllegalArgumentExceptionWhenTargetNull() {
         assertThrows(IllegalArgumentException.class, () -> savings.transfer(null, 10.0, day1));
         assertEquals(1000.0, savings.checkBalance(), 0.000001);
     }
 
     @Test
-    void transfer_throwsIllegalArgumentException_whenWouldOverdraw() {
+    void transferThrowsIllegalArgumentExceptionWhenWouldOverdraw() {
         assertThrows(IllegalArgumentException.class, () -> savings.transfer(savings2, 1000.01, day1));
         assertEquals(1000.0, savings.checkBalance(), 0.000001);
         assertEquals(0.0, savings2.checkBalance(), 0.000001);
     }
 
     @Test
-    void transferCountsTowardDailyLimitwithdrawThenTransferSameDay() {
+    void transferCountsTowardDailyLimitWithdrawThenTransferSameDay() {
         savings.withdraw(400.0, day1);
 
         assertThrows(IllegalArgumentException.class,
@@ -101,7 +105,7 @@ void setupWorks() {
     }
 
     @Test
-    void transferCountsTowardDailyLimittransferThenWithdrawSameDay() {
+    void transferCountsTowardDailyLimitTransferThenWithdrawSameDay() {
         savings.transfer(savings2, 400.0, day1);
 
         assertThrows(IllegalArgumentException.class,
@@ -112,7 +116,7 @@ void setupWorks() {
     }
 
     @Test
-    void compoundDailyInterest_usesBankRate_andAppliesOncePerDay() {
+    void compoundDailyInterestUsesBankRateAndAppliesOncePerDay() {
         savings.compoundDailyInterest(day1);
         assertEquals(1001.0, savings.checkBalance(), 0.000001);
 
@@ -124,11 +128,11 @@ void setupWorks() {
     }
 
     @Test
-    void compoundDailyInterest_reflectsRateChanges_nextDay() {
+    void compoundDailyInterestReflectsRateChangesNextDay() {
         savings.compoundDailyInterest(day1);
         assertEquals(1001.0, savings.checkBalance(), 0.000001);
 
-        Savings.setSavingsAnnualInterestRate(0.730);
+        bank.setSavingsAnnualInterestRate(0.730);
 
         savings.compoundDailyInterest(day2);
         assertEquals(1003.002, savings.checkBalance(), 0.000001);
