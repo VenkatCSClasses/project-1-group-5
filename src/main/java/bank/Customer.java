@@ -1,23 +1,21 @@
 package bank;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Customer {
     
     private String username;
-    private int userID;
     private int pin;
-    List<BankAccount> accounts;
+    private int userType; // 0 for customer, 1 for teller, 2 for admin
+    private int userID;
+    private HashMap<Integer, BankAccount> accounts;
 
-
-    public Customer(String username, int userID, int pin){
+    public Customer(String username, int pin, int userType){
         for (Customer customer : Bank.getCustomers()) {
             if (customer.getUsername().equals(username)) {
                 throw new IllegalArgumentException("Username already exists.");
-            }
-            if (customer.getUserID() == userID) {
-                throw new IllegalArgumentException("UserID already exists.");
             }
         }
         if (String.valueOf(pin).length() != 4) {
@@ -27,9 +25,10 @@ public class Customer {
             throw new IllegalArgumentException("Pin cannot be negative.");
         }
         this.username = username;
-        this.userID = userID;
+        this.userType = userType;
         this.pin = pin;
-        this.accounts = new ArrayList<>();
+        this.userID = Bank.getCustomerCount();
+        this.accounts = new HashMap<Integer, BankAccount>();
     }
 
     public String getUsername() {
@@ -44,19 +43,13 @@ public class Customer {
         return pin;
     }
 
-    public List<BankAccount> getAccounts() {
+    public HashMap<Integer, BankAccount> getAccounts() {
         return accounts;
     }
 
     // withdraw or deposit amount into given account, transation type = 0 for withdraw, 1 for deposit
     public void processTransaction(int accountNumber, double amount, int transactionType){
-        BankAccount account = null;
-        for (BankAccount acc : accounts) {
-            if (acc.getAccountNumber() == accountNumber) {
-                account = acc;
-                break;
-            }
-        }
+        BankAccount account = accounts.get(accountNumber);
         if (account == null) {
             throw new IllegalArgumentException("Account number not found.");
         }
@@ -72,10 +65,9 @@ public class Customer {
             return 0.00;
         }
         else {
-            for (BankAccount account : accounts) {
-                if (account.getAccountNumber() == accountNum) {
-                    return account.getBalance();
-                }
+            BankAccount account = accounts.get(accountNum);
+            if (account != null) {
+                return account.checkBalance();
             }
         }
         return 0.00;
@@ -89,7 +81,7 @@ public class Customer {
         }
         else
         {
-            for (BankAccount account : accounts) {
+            for (BankAccount account : accounts.values()) {
                 accountNums += account.getAccountNumber() + ", ";
             }
             return "Username: " + username + ", UserID: " + userID + ", Accounts: [" + accountNums.substring(0, accountNums.length() - 2) + "]";

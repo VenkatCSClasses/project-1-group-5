@@ -48,7 +48,7 @@ public class BankAdmin {
         if (Bank.getAllAccounts().containsKey(accountNumber)) {
             BankAccount account = Bank.getAllAccounts().get(accountNumber);
             if (account.isFrozen()) {
-                account.isFrozen();
+                account.isFrozen;
             } else {
                 account.isFrozen();
             }
