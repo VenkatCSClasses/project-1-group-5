@@ -20,7 +20,7 @@ public interface BankAccount {
     boolean isFrozen();
 
     String toString();
-    
+
     Integer getAccountNumber();
 
 

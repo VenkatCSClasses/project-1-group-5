@@ -49,3 +49,4 @@ public class AtmTest {
             atm.processTransaction(67890, 100.0, 99); //invalid transaction type
         });
 }
+    }
