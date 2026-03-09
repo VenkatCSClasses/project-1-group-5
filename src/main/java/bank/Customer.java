@@ -1,16 +1,15 @@
 package bank;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Collections;
+import java.util.List;
 
 public class Customer {
     private String username;
     private int pin;
     private int userType; // 0 for customer, 1 for teller, 2 for admin
     private int userID;
-    private HashMap<Integer, BankAccount> accounts;
+    private ArrayList<BankAccount> accounts;
 
     // keep a static registry so we can enforce uniqueness
     private static final List<Customer> allCustomers = new ArrayList<>();
@@ -34,7 +33,7 @@ public class Customer {
         this.userType = 0; // default to customer
         this.pin = pin;
         this.userID = userID;
-        this.accounts = new HashMap<Integer, BankAccount>();
+        this.accounts = new ArrayList<>();
         allCustomers.add(this);
     }
 
@@ -57,7 +56,7 @@ public class Customer {
         return pin;
     }
 
-    public HashMap<Integer, BankAccount> getAccounts() {
+    public ArrayList<BankAccount> getAccounts() {
         return accounts;
     }
 
@@ -95,7 +94,7 @@ public class Customer {
         }
         else
         {
-            for (BankAccount account : accounts.values()) {
+            for (BankAccount account : accounts) {
                 accountNums += account.getAccountNumber() + ", ";
             }
             return "Username: " + username + ", UserID: " + userID + ", Accounts: [" + accountNums.substring(0, accountNums.length() - 2) + "]";
