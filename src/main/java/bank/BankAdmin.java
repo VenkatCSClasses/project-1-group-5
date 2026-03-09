@@ -3,8 +3,15 @@ import java.util.List;
 
 public class BankAdmin {
     public void createAccount(int customerID, double initialDeposit, int accountType){
-        BankAccount newAccount = new BankAccount(customerID, initialDeposit, accountType);
-        Bank.allAccounts.put(newAccount.getAccountNumber(), newAccount);
+        if (accountType == 1) {
+            Checking newAccount = new Checking(customerID, initialDeposit);
+            Bank.allAccounts.put(newAccount.accountNum, newAccount);
+        } else if (accountType == 2) {
+            Savings newAccount = new Savings(customerID, initialDeposit);
+            Bank.allAccounts.put(newAccount.accountNum, newAccount);
+        } else {
+            throw new IllegalArgumentException("Invalid account type");
+        }
     }
 
     public void closeAccount(int accountNumber){
