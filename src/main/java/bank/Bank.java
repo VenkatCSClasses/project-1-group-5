@@ -2,27 +2,27 @@ package bank;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
 public class Bank {
 
-    public final Set<BankAccount> allAccounts;
+    public final HashMap<String, BankAccount> allAccounts;
     public double totalCash;
 
     public double savingsDailyWithdrawalLimit;
     public double savingsAnnualInterestRate;
 
     public Bank() {
-        this.allAccounts = new HashSet<>();
+        this.allAccounts = new HashMap<String, BankAccount>();
         this.totalCash = 0.0;
         this.savingsDailyWithdrawalLimit = 0.0;
         this.savingsAnnualInterestRate = 0.0;
     }
 
     public List<BankAccount> getAllAccounts() {
-        return Collections.unmodifiableList(new ArrayList<>(allAccounts));
+        return Collections.unmodifiableList(new ArrayList<>(allAccounts.values()));
     }
 
     public double getTotalCash() {
@@ -33,7 +33,7 @@ public class Bank {
         if (account == null) {
             throw new IllegalArgumentException("account cannot be null");
         }
-        allAccounts.add(account);
+        allAccounts.put(account.getAccountNumber(), account);
     }
 
     public void setSavingsDailyWithdrawalLimit(double limit) {
