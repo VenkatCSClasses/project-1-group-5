@@ -1,16 +1,17 @@
 package bank;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class SavingsTest {
 
     private Bank bank;
     private Savings savings;
-    private Checking checking;
+    private Savings savings2;
     private LocalDate day1;
     private LocalDate day2;
 
@@ -25,9 +26,14 @@ public class SavingsTest {
         Savings.setSavingsDailyWithdrawalLimit(500.0);
 
         savings = new Savings(1, 1000.0, bank);
-        checking = new Checking(2, 0.0, bank);
+        savings2 = new Savings(2, 0.0, bank);
     }
-
+@Test
+void setupWorks() {
+    assertEquals(1000.0, savings.checkBalance(), 0.000001);
+    assertEquals(0.0, savings2.checkBalance(), 0.000001);
+    assertEquals(1000.0, bank.getTotalCash(), 0.000001);
+}
     @Test
     void withdrawReducesBalancewhenAllowed() {
         savings.withdraw(100.0, day1);
@@ -65,9 +71,9 @@ public class SavingsTest {
 
     @Test
     void transfer_movesMoney_whenAllowed() {
-        savings.transfer(checking, 200.0, day1);
+        savings.transfer(savings2, 200.0, day1);
         assertEquals(800.0, savings.checkBalance(), 0.000001);
-        assertEquals(200.0, checking.checkBalance(), 0.000001);
+        assertEquals(200.0, savings2.checkBalance(), 0.000001);
     }
 
     @Test
@@ -78,9 +84,9 @@ public class SavingsTest {
 
     @Test
     void transfer_throwsIllegalArgumentException_whenWouldOverdraw() {
-        assertThrows(IllegalArgumentException.class, () -> savings.transfer(checking, 1000.01, day1));
+        assertThrows(IllegalArgumentException.class, () -> savings.transfer(savings2, 1000.01, day1));
         assertEquals(1000.0, savings.checkBalance(), 0.000001);
-        assertEquals(0.0, checking.checkBalance(), 0.000001);
+        assertEquals(0.0, savings2.checkBalance(), 0.000001);
     }
 
     @Test
@@ -88,21 +94,21 @@ public class SavingsTest {
         savings.withdraw(400.0, day1);
 
         assertThrows(IllegalArgumentException.class,
-                () -> savings.transfer(checking, 200.0, day1));
+                () -> savings.transfer(savings2, 200.0, day1));
 
         assertEquals(600.0, savings.checkBalance(), 0.000001);
-        assertEquals(0.0, checking.checkBalance(), 0.000001);
+        assertEquals(0.0, savings2.checkBalance(), 0.000001);
     }
 
     @Test
     void transferCountsTowardDailyLimittransferThenWithdrawSameDay() {
-        savings.transfer(checking, 400.0, day1);
+        savings.transfer(savings2, 400.0, day1);
 
         assertThrows(IllegalArgumentException.class,
                 () -> savings.withdraw(200.0, day1));
 
         assertEquals(600.0, savings.checkBalance(), 0.000001);
-        assertEquals(400.0, checking.checkBalance(), 0.000001);
+        assertEquals(400.0, savings2.checkBalance(), 0.000001);
     }
 
     @Test
