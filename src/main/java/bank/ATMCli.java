@@ -14,7 +14,7 @@ public class ATMCli {
             System.out.println("1. Log in");
             System.out.println("Enter User ID:");
             String userId = scanner.nextLine();
-            int testUserId = Integer.parseInt(userId); // Replace with actual user ID for testing
+            int testUserId = Integer.parseInt(userId); 
             if (!userId.equals(String.valueOf(testUserId))) {
                 System.out.println("User ID not found. Please try again.");
                 continue;
@@ -82,14 +82,14 @@ public class ATMCli {
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
             }
-            }
 
-            // loop back to login prompt
+            scanner.close();         
         }
-
-        scanner.close();
     }
 
 }
+
+
+
 
 
