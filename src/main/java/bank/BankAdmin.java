@@ -1,7 +1,36 @@
 package bank;
+import static bank.Customer.allCustomers;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class BankAdmin extends Customer{
+    private String username;
+    private int pin;
+    private int userType; // 0 for customer, 1 for teller, 2 for admin
+    private int userID;
+
+    private static final List<Customer> allCustomers = new ArrayList<>();
+
+    public BankAdmin(String username, int pin) {
+        super(username, pin);
+        for (Customer customer : allCustomers) {
+            if (customer.getUsername().equals(username)) {
+                throw new IllegalArgumentException("Username already exists.");
+            }
+            if (customer.getUserID() == userID) {
+                throw new IllegalArgumentException("UserID already exists.");
+            }
+        }
+        if (String.valueOf(pin).length() != 4) {
+            throw new IllegalArgumentException("Pin must be 4 digits.");
+        }
+        if (pin < 0) {
+            throw new IllegalArgumentException("Pin cannot be negative.");
+        }
+        this.userType = 2; // set user type to admin
+    }
+
     public void createAccount(int customerID, double initialDeposit, int accountType){
         if (accountType == 1) {
             Checking newAccount = new Checking(customerID, initialDeposit);
