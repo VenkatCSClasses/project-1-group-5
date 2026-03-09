@@ -73,7 +73,7 @@ public class Customer {
         else {
             for (BankAccount account : accounts) {
                 if (account.getAccountNumber() == accountNum) {
-                    return account.getBalance();
+                    return account.checkBalance();
                 }
             }
         }
