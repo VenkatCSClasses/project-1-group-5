@@ -7,11 +7,11 @@ import java.util.List;
 
 public class Bank {
 
-    public final HashMap<Integer, BankAccount> allAccounts;
-    public double totalCash;
+    private final HashMap<Integer, BankAccount> allAccounts;
+    private double totalCash;
 
-    public double savingsDailyWithdrawalLimit;
-    public double savingsAnnualInterestRate;
+    private double savingsDailyWithdrawalLimit;
+    private double savingsAnnualInterestRate;
 
     public Bank() {
         this.allAccounts = new HashMap<Integer, BankAccount>();

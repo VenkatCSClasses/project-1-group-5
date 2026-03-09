@@ -5,29 +5,29 @@ public class BankAdmin {
     public void createAccount(int customerID, double initialDeposit, int accountType){
         if (accountType == 1) {
             Checking newAccount = new Checking(customerID, initialDeposit);
-            Bank.allAccounts.put(newAccount.getAccountNumber(), newAccount);
+            Bank.addAccount(newAccount);
         } else if (accountType == 2) {
             Savings newAccount = new Savings(customerID, initialDeposit);
-            Bank.allAccounts.put(newAccount.getAccountNumber(), newAccount);
+            Bank.addAccount(newAccount);
         } else {
             throw new IllegalArgumentException("Invalid account type");
         }
     }
 
     public void closeAccount(int accountNumber){
-        if (Bank.allAccounts.containsKey(accountNumber)) {
-            Bank.allAccounts.remove(accountNumber);
+        if (Bank.getAllAccounts().containsKey(accountNumber)) {
+            Bank.removeAccount(accountNumber);
         } else {
             throw new IllegalArgumentException("Account does not exist");
         }
     }
 
     public void processTransaction(int accountNumber, double amount, int transactionType){
-       if (Bank.allAccounts.containsKey(accountNumber)) {
+       if (Bank.getAllAccounts().containsKey(accountNumber)) {
             if (transactionType == 1) {
-                Bank.allAccounts.get(accountNumber).deposit(amount);
+                Bank.getAllAccounts().get(accountNumber).deposit(amount);
             } else if (transactionType == 2) {
-                Bank.allAccounts.get(accountNumber).withdraw(amount);
+                Bank.getAllAccounts().get(accountNumber).withdraw(amount);
             } else {
                 throw new IllegalArgumentException("Invalid transaction type");
             }
@@ -38,24 +38,24 @@ public class BankAdmin {
 
     public double calculateTotalAssets(){
         double totalAssets = 0;
-        for (BankAccount account : Bank.allAccounts.values()) {
+        for (BankAccount account : Bank.getAllAccounts().values()) {
             totalAssets += account.checkBalance();
         }
         return totalAssets;
     }
 
     public void toggleFreezeAccount(int accountNumber){
-        if (Bank.allAccounts.containsKey(accountNumber)) {
-            BankAccount account = Bank.allAccounts.get(accountNumber);
-            account.isFrozen = !account.isFrozen;
+        if (Bank.getAllAccounts().containsKey(accountNumber)) {
+            BankAccount account = Bank.getAllAccounts().get(accountNumber);
+            account.toggleFreeze();
         } else {
             throw new IllegalArgumentException("Account does not exist");
         }
     }
 
     public List<Transaction> getSuspiciousActivityReport(int accountNumber){
-        if (Bank.allAccounts.containsKey(accountNumber)) {
-            return Bank.allAccounts.get(accountNumber).getSuspiciousActivityReport();
+        if (Bank.getAllAccounts().containsKey(accountNumber)) {
+            return Bank.getAllAccounts().get(accountNumber).getSuspiciousActivity();
         } else {
             throw new IllegalArgumentException("Account does not exist");
         }
