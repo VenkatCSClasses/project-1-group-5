@@ -20,8 +20,8 @@ public class Bank {
         this.savingsAnnualInterestRate = 0.0;
     }
 
-    public List<BankAccount> getAllAccounts() {
-        return Collections.unmodifiableList(new ArrayList<>(allAccounts.values()));
+    public HashMap<Integer, BankAccount> getAllAccounts() {
+        return allAccounts;
     }
 
     public double getTotalCash() {
