@@ -173,6 +173,11 @@ public class Checking implements BankAccount {
 
     }
 
+    public double getCustomerID() {
+        return this.customerID;
+
+    }
+
     @Override
     public List<Transaction> getSuspiciousActivity() {
         return this.suspiciousActivity; 
