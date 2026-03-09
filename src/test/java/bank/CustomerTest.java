@@ -12,7 +12,7 @@ public class CustomerTest {
 
     @Test
     void processTransactionTest(){
-        Customer customer = new Customer("Dena", 12345, 1234);
+        Customer customer = new Customer("Dena1", 12345, 1234);
         bankTeller.createAccount(12345, 1000.0, 1);
         customer.processTransaction(12345, 500.0, 1); // deposit
         assertEquals(1500.0, customer.checkBalance(67890));
@@ -32,7 +32,7 @@ public class CustomerTest {
 
     @Test
     void checkBalanceTest(){
-        Customer customer = new Customer("Dena", 12345, 1234);
+        Customer customer = new Customer("Dena2", 12345, 1234);
         assertEquals(0.0, customer.checkBalance(67890));
         bankTeller.createAccount(12345, 1000.0, 1);
         assertEquals(1000.0, customer.checkBalance(67890));
@@ -45,7 +45,7 @@ public class CustomerTest {
 
     @Test
     void getAccountDetailsTest(){
-        Customer customer1 = new Customer("Dena", 12345, 1234);
+        Customer customer1 = new Customer("Dena3", 12345, 1234);
         String expected1 = "Username: Dena, UserID: 12345, Accounts: []";
         String actual1 = customer1.getAccountDetails();
         assertEquals(expected1, actual1);
@@ -63,7 +63,7 @@ public class CustomerTest {
 
     @Test
     void changePinTest(){
-        Customer customer = new Customer("Dena", 12345, 1234);
+        Customer customer = new Customer("Dena5", 12345, 1234);
         customer.changePin(1234,5678);
         assertEquals(5678, customer.getPin());
         //invalid cases
@@ -86,7 +86,7 @@ public class CustomerTest {
 
     @Test
     void constructorTest(){
-        Customer customer = new Customer("Dena", 12345, 1234);
+        Customer customer = new Customer("Dena6", 12345, 1234);
         assertEquals("Dena", customer.getUsername());
         assertEquals(12345, customer.getUserID());
         assertEquals(1234, customer.getPin());
