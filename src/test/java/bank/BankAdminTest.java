@@ -11,7 +11,7 @@ public class BankAdminTest {
     @Test
     void createAccountTest(){
         bankTeller.createAccount(1, 1000.0, 1);
-        assert bank.getAccount(1).getCustomerNumber() == 1;
+        assert bank.getAll(1).getCustomerNumber() == 1;
         assert bank.getAccount(1).getBalance() == 1000.0;
         assert bank.getAccount(1).getAccountType() == 1;
         assert !bank.getAccount(1).isFrozen();

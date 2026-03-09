@@ -1,23 +1,21 @@
 package bank;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Customer {
     
     private String username;
-    private int userID;
     private int pin;
-    List<BankAccount> accounts;
+    private int userType; // 0 for customer, 1 for teller, 2 for admin
+    private int userID;
+    private ArrayList<BankAccount> accounts;
 
-
-    public Customer(String username, int userID, int pin){
+    public Customer(String username, int pin, int userType){
         for (Customer customer : Bank.getCustomers()) {
             if (customer.getUsername().equals(username)) {
                 throw new IllegalArgumentException("Username already exists.");
-            }
-            if (customer.getUserID() == userID) {
-                throw new IllegalArgumentException("UserID already exists.");
             }
         }
         if (String.valueOf(pin).length() != 4) {
@@ -27,9 +25,10 @@ public class Customer {
             throw new IllegalArgumentException("Pin cannot be negative.");
         }
         this.username = username;
-        this.userID = userID;
+        this.userType = userType;
         this.pin = pin;
-        this.accounts = new ArrayList<>();
+        this.userID = Bank.getCustomerCount();
+        this.accounts = new ArrayList<BankAccount>();
     }
 
     public String getUsername() {
@@ -44,7 +43,7 @@ public class Customer {
         return pin;
     }
 
-    public List<BankAccount> getAccounts() {
+    public HashMap<Integer, BankAccount> getAccounts() {
         return accounts;
     }
 
