@@ -20,9 +20,6 @@ public class Transaction {
     public int getTransactionID(){
         return this.transactionID;
     }
-    public int getSuspiciousActivity(){
-        return this.suspiciousActivity ? 1 : 0;
-    }
 
     public boolean getTransactionSuspiciousActivity(){
         return this.suspiciousActivity ;

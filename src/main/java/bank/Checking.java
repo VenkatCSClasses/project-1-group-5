@@ -191,6 +191,12 @@ public class Checking implements BankAccount {
     }
 
     @Override
+    public int getAccountNumber() {
+        return this.accountNum; 
+        
+    }
+
+    @Override
     public String toString() {
         return "Checking Account - Customer ID: " + this.customerID + ", Balance: $" + String.format("%.2f", this.balance) + ", Frozen: " + this.isFrozen;
     }
