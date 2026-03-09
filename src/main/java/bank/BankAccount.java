@@ -21,7 +21,7 @@ public interface BankAccount {
 
     String toString();
     
-
+    Integer getAccountNumber();
 
 
 

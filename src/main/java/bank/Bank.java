@@ -4,18 +4,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 public class Bank {
 
-    public final HashMap<String, BankAccount> allAccounts;
-    public double totalCash;
+    private final HashMap<Integer, BankAccount> allAccounts;
+    private double totalCash;
 
-    public double savingsDailyWithdrawalLimit;
-    public double savingsAnnualInterestRate;
+    private double savingsDailyWithdrawalLimit;
+    private double savingsAnnualInterestRate;
 
     public Bank() {
-        this.allAccounts = new HashMap<String, BankAccount>();
+        this.allAccounts = new HashMap<>();
         this.totalCash = 0.0;
         this.savingsDailyWithdrawalLimit = 0.0;
         this.savingsAnnualInterestRate = 0.0;
@@ -33,7 +32,12 @@ public class Bank {
         if (account == null) {
             throw new IllegalArgumentException("account cannot be null");
         }
+        if (allAccounts.containsKey(account.getAccountNumber())) {
+            throw new IllegalArgumentException("account number already exists");
+        }
+
         allAccounts.put(account.getAccountNumber(), account);
+        totalCash += account.checkBalance();
     }
 
     public void setSavingsDailyWithdrawalLimit(double limit) {
@@ -41,7 +45,6 @@ public class Bank {
             throw new IllegalArgumentException("limit cannot be negative");
         }
         this.savingsDailyWithdrawalLimit = limit;
-        Savings.setSavingsDailyWithdrawalLimit(limit);
     }
 
     public double getSavingsDailyWithdrawalLimit() {
@@ -53,18 +56,9 @@ public class Bank {
             throw new IllegalArgumentException("rate cannot be negative");
         }
         this.savingsAnnualInterestRate = rate;
-        Savings.setSavingsAnnualInterestRate(rate);
     }
 
     public double getSavingsAnnualInterestRate() {
         return savingsAnnualInterestRate;
-    }
-
-    void registerInitialBalance(double startingBalance) {
-        totalCash += startingBalance;
-    }
-
-    void adjustTotalCash(double delta) {
-        totalCash += delta;
     }
 }

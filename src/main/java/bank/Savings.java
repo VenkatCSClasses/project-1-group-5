@@ -1,22 +1,20 @@
 package bank;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Savings implements BankAccount {
-    int customerID;
-    int accountNum;
-    double balance;
-    boolean isFrozen;
 
-    Set<Transaction> transactionHistory;
-    Set<Transaction> suspiciousActivity;
+    private int customerID;
+    private int accountNum;
+    private double balance;
+    private boolean isFrozen;
 
     private final Bank bank;
 
-    private static double savingsAnnualInterestRate = 0.0;
-    private static double savingsDailyWithdrawalLimit = Double.MAX_VALUE;
+    private List<Transaction> transactionHistory;
+    private List<Transaction> suspiciousActivity;
 
     private LocalDate lastInterestAppliedDate;
     private LocalDate lastWithdrawalDate;
@@ -33,20 +31,22 @@ public class Savings implements BankAccount {
         this.isFrozen = false;
 
         this.accountNum = (int) (Math.random() * 1000000);
-        this.transactionHistory = new HashSet<>();
-        this.suspiciousActivity = new HashSet<>();
+        this.transactionHistory = new ArrayList<>();
+        this.suspiciousActivity = new ArrayList<>();
 
         this.lastInterestAppliedDate = null;
         this.lastWithdrawalDate = null;
         this.withdrawnToday = 0.0;
-
-        this.bank.registerInitialBalance(balance);
     }
 
     @Override
     public void deposit(double amount) {
+        if (isFrozen) {
+            throw new IllegalStateException("Account is frozen!");
+        }
+
         if (amount <= 0) {
-            Transaction newTransaction = new Transaction(
+            Transaction t = new Transaction(
                     (int) (Math.random() * 1000000),
                     (int) (System.currentTimeMillis() / 1000),
                     "Deposit",
@@ -54,14 +54,13 @@ public class Savings implements BankAccount {
                     false,
                     false
             );
-            this.transactionHistory.add(newTransaction);
+            transactionHistory.add(t);
             throw new IllegalArgumentException("Deposit amount must be greater than 0!");
         }
 
-        this.balance += amount;
-        this.bank.adjustTotalCash(amount);
+        balance += amount;
 
-        Transaction newTransaction = new Transaction(
+        Transaction t = new Transaction(
                 (int) (Math.random() * 1000000),
                 (int) (System.currentTimeMillis() / 1000),
                 "Deposit",
@@ -69,7 +68,7 @@ public class Savings implements BankAccount {
                 true,
                 false
         );
-        this.transactionHistory.add(newTransaction);
+        transactionHistory.add(t);
     }
 
     @Override
@@ -78,12 +77,16 @@ public class Savings implements BankAccount {
     }
 
     public void withdraw(double amount, LocalDate date) {
+        if (isFrozen) {
+            throw new IllegalStateException("Account is frozen!");
+        }
+
         if (date == null) {
             throw new IllegalArgumentException("date cannot be null");
         }
 
         if (amount <= 0) {
-            Transaction newTransaction = new Transaction(
+            Transaction t = new Transaction(
                     (int) (Math.random() * 1000000),
                     (int) (System.currentTimeMillis() / 1000),
                     "Withdrawal",
@@ -91,12 +94,12 @@ public class Savings implements BankAccount {
                     false,
                     false
             );
-            this.transactionHistory.add(newTransaction);
+            transactionHistory.add(t);
             throw new IllegalArgumentException("Withdrawal amount must be greater than 0!");
         }
 
-        if (this.balance < amount) {
-            Transaction newTransaction = new Transaction(
+        if (balance < amount) {
+            Transaction t = new Transaction(
                     (int) (Math.random() * 1000000),
                     (int) (System.currentTimeMillis() / 1000),
                     "Withdrawal",
@@ -104,17 +107,17 @@ public class Savings implements BankAccount {
                     false,
                     false
             );
-            this.transactionHistory.add(newTransaction);
+            transactionHistory.add(t);
             throw new IllegalArgumentException("Insufficient funds!");
         }
 
-        if (this.lastWithdrawalDate == null || !this.lastWithdrawalDate.equals(date)) {
-            this.withdrawnToday = 0.0;
-            this.lastWithdrawalDate = date;
+        if (lastWithdrawalDate == null || !lastWithdrawalDate.equals(date)) {
+            withdrawnToday = 0.0;
+            lastWithdrawalDate = date;
         }
 
-        if (this.withdrawnToday + amount > savingsDailyWithdrawalLimit) {
-            Transaction newTransaction = new Transaction(
+        if (withdrawnToday + amount > bank.getSavingsDailyWithdrawalLimit()) {
+            Transaction t = new Transaction(
                     (int) (Math.random() * 1000000),
                     (int) (System.currentTimeMillis() / 1000),
                     "Withdrawal",
@@ -122,17 +125,15 @@ public class Savings implements BankAccount {
                     false,
                     true
             );
-            this.transactionHistory.add(newTransaction);
-            this.suspiciousActivity.add(newTransaction);
+            transactionHistory.add(t);
+            suspiciousActivity.add(t);
             throw new IllegalArgumentException("Daily withdrawal limit exceeded!");
         }
 
-        this.balance -= amount;
-        this.withdrawnToday += amount;
-        this.lastWithdrawalDate = date;
-        this.bank.adjustTotalCash(-amount);
+        balance -= amount;
+        withdrawnToday += amount;
 
-        Transaction newTransaction = new Transaction(
+        Transaction t = new Transaction(
                 (int) (Math.random() * 1000000),
                 (int) (System.currentTimeMillis() / 1000),
                 "Withdrawal",
@@ -140,7 +141,7 @@ public class Savings implements BankAccount {
                 true,
                 false
         );
-        this.transactionHistory.add(newTransaction);
+        transactionHistory.add(t);
     }
 
     @Override
@@ -149,6 +150,10 @@ public class Savings implements BankAccount {
     }
 
     public void transfer(BankAccount targetAccount, double amount, LocalDate date) {
+        if (isFrozen) {
+            throw new IllegalStateException("Account is frozen!");
+        }
+
         if (targetAccount == null) {
             throw new IllegalArgumentException("Target account cannot be null!");
         }
@@ -158,7 +163,7 @@ public class Savings implements BankAccount {
         }
 
         if (amount <= 0) {
-            Transaction newTransaction = new Transaction(
+            Transaction t = new Transaction(
                     (int) (Math.random() * 1000000),
                     (int) (System.currentTimeMillis() / 1000),
                     "Transfer",
@@ -166,12 +171,12 @@ public class Savings implements BankAccount {
                     false,
                     false
             );
-            this.transactionHistory.add(newTransaction);
+            transactionHistory.add(t);
             throw new IllegalArgumentException("Transfer amount must be greater than 0!");
         }
 
-        if (this.balance < amount) {
-            Transaction newTransaction = new Transaction(
+        if (balance < amount) {
+            Transaction t = new Transaction(
                     (int) (Math.random() * 1000000),
                     (int) (System.currentTimeMillis() / 1000),
                     "Transfer",
@@ -179,17 +184,17 @@ public class Savings implements BankAccount {
                     false,
                     false
             );
-            this.transactionHistory.add(newTransaction);
+            transactionHistory.add(t);
             throw new IllegalArgumentException("Insufficient funds!");
         }
 
-        if (this.lastWithdrawalDate == null || !this.lastWithdrawalDate.equals(date)) {
-            this.withdrawnToday = 0.0;
-            this.lastWithdrawalDate = date;
+        if (lastWithdrawalDate == null || !lastWithdrawalDate.equals(date)) {
+            withdrawnToday = 0.0;
+            lastWithdrawalDate = date;
         }
 
-        if (this.withdrawnToday + amount > savingsDailyWithdrawalLimit) {
-            Transaction newTransaction = new Transaction(
+        if (withdrawnToday + amount > bank.getSavingsDailyWithdrawalLimit()) {
+            Transaction t = new Transaction(
                     (int) (Math.random() * 1000000),
                     (int) (System.currentTimeMillis() / 1000),
                     "Transfer",
@@ -197,22 +202,16 @@ public class Savings implements BankAccount {
                     false,
                     true
             );
-            this.transactionHistory.add(newTransaction);
-            this.suspiciousActivity.add(newTransaction);
+            transactionHistory.add(t);
+            suspiciousActivity.add(t);
             throw new IllegalArgumentException("Daily withdrawal limit exceeded!");
         }
 
-        this.balance -= amount;
-        this.withdrawnToday += amount;
-        this.lastWithdrawalDate = date;
-
-        // money leaves this account's bank first
-        this.bank.adjustTotalCash(-amount);
-
-        // target deposit will add to its own bank
+        balance -= amount;
+        withdrawnToday += amount;
         targetAccount.deposit(amount);
 
-        Transaction newTransaction = new Transaction(
+        Transaction t = new Transaction(
                 (int) (Math.random() * 1000000),
                 (int) (System.currentTimeMillis() / 1000),
                 "Transfer",
@@ -220,7 +219,7 @@ public class Savings implements BankAccount {
                 true,
                 false
         );
-        this.transactionHistory.add(newTransaction);
+        transactionHistory.add(t);
     }
 
     public void compoundDailyInterest(LocalDate date) {
@@ -232,14 +231,13 @@ public class Savings implements BankAccount {
             return;
         }
 
-        double dailyRate = savingsAnnualInterestRate / 365.0;
-        double interest = this.balance * dailyRate;
+        double dailyRate = bank.getSavingsAnnualInterestRate() / 365.0;
+        double interest = balance * dailyRate;
 
         if (interest != 0.0) {
-            this.balance += interest;
-            this.bank.adjustTotalCash(interest);
+            balance += interest;
 
-            Transaction newTransaction = new Transaction(
+            Transaction t = new Transaction(
                     (int) (Math.random() * 1000000),
                     (int) (System.currentTimeMillis() / 1000),
                     "Interest",
@@ -247,7 +245,7 @@ public class Savings implements BankAccount {
                     true,
                     false
             );
-            this.transactionHistory.add(newTransaction);
+            transactionHistory.add(t);
         }
 
         lastInterestAppliedDate = date;
@@ -255,44 +253,33 @@ public class Savings implements BankAccount {
 
     @Override
     public double checkBalance() {
-        return this.balance;
+        return balance;
     }
 
     @Override
-    public java.util.List<Transaction> getSuspiciousActivity() {
-        return new java.util.ArrayList<>(this.suspiciousActivity);
+    public List<Transaction> getSuspiciousActivity() {
+        return new ArrayList<>(suspiciousActivity);
     }
 
     @Override
-    public java.util.List<Transaction> getTransactionHistory() {
-        return new java.util.ArrayList<>(this.transactionHistory);
+    public List<Transaction> getTransactionHistory() {
+        return new ArrayList<>(transactionHistory);
     }
 
     @Override
     public boolean isFrozen() {
-        return this.isFrozen;
+        return isFrozen;
+    }
+
+    @Override
+    public Integer getAccountNumber() {
+        return accountNum;
     }
 
     @Override
     public String toString() {
-        return "Savings Account - Customer ID: " + this.customerID
-                + ", Balance: $" + String.format("%.2f", this.balance)
-                + ", Frozen: " + this.isFrozen;
-    }
-
-    public static void setSavingsAnnualInterestRate(double rate) {
-        savingsAnnualInterestRate = rate;
-    }
-
-    public static void setSavingsDailyWithdrawalLimit(double limit) {
-        savingsDailyWithdrawalLimit = limit;
-    }
-
-    public static double getSavingsAnnualInterestRate() {
-        return savingsAnnualInterestRate;
-    }
-
-    public static double getSavingsDailyWithdrawalLimit() {
-        return savingsDailyWithdrawalLimit;
+        return "Savings Account - Customer ID: " + customerID
+                + ", Balance: $" + String.format("%.2f", balance)
+                + ", Frozen: " + isFrozen;
     }
 }
