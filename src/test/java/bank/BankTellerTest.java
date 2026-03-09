@@ -15,7 +15,8 @@ public class BankTellerTest {
     @BeforeEach
     void setUp() {
         bank = new Bank();
-        bankTeller = new BankTeller();
+        Customer test = new Customer("Test Customer", 1234);
+        bankTeller = new BankTeller("Test Teller", 9087);
         bank.setSavingsAnnualInterestRate(0.365);
         bank.setSavingsDailyWithdrawalLimit(500.0);
     }
