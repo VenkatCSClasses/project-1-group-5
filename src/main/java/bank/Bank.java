@@ -9,9 +9,9 @@ public class Bank {
 
     // static registry used by teller/admin helpers
     public static HashMap<Integer, BankAccount> allAccounts = new HashMap<>();
-
+    
     private final HashMap<Integer, BankAccount> instanceAccounts;
-    // private final HashMap<Integer, Customer> allCustomers;
+    private final HashMap<Integer, Customer> allCustomers;
     private double totalCash;
 
     private double savingsDailyWithdrawalLimit;
@@ -21,7 +21,7 @@ public class Bank {
         // clear static map when new instance is created so that tests start fresh
         allAccounts.clear();
         this.instanceAccounts = new HashMap<>();
-        // this.allCustomers = new HashMap<>();
+        this.allCustomers = new HashMap<>();
         this.totalCash = 0.0;
         this.savingsDailyWithdrawalLimit = 0.0;
         this.savingsAnnualInterestRate = 0.0;
@@ -31,9 +31,7 @@ public class Bank {
         return Collections.unmodifiableList(new ArrayList<>(instanceAccounts.values()));
     }
 
-    // public List<Customer> getAllCustomers() {
-    //     return Collections.unmodifiableList(new ArrayList<>(allCustomers.values()));
-    // }
+  
 
     public double getTotalCash() {
         return totalCash;
@@ -92,29 +90,29 @@ public class Bank {
         }
     }
 
-    // public void addCustomer(Customer customer) {
-    //     if (customer == null) {
-    //         throw new IllegalArgumentException("customer cannot be null");
-    //     }
+     public void addCustomer(Customer customer) {
+        if (customer == null) {
+            throw new IllegalArgumentException("customer cannot be null");
+         }
 
-    //     if (customer.getUserID() == null) {
-    //         throw new IllegalArgumentException("user ID cannot be null");
-    //     }
+         if (customer.getUserID() <= 0) {
+             throw new IllegalArgumentException("user ID must be positive");
+         }
 
-    //     if (allCustomers.containsKey(customer.getUserID())) {
-    //         throw new IllegalArgumentException("user ID already exists");
-    //     }
+         if (allCustomers.containsKey(customer.getUserID())) {
+             throw new IllegalArgumentException("user ID already exists");
+         }
 
-    //     allCustomers.put(customer.getUserID(), customer);
-    // }
+         allCustomers.put(customer.getUserID(), customer);
+     }
 
-    // public Customer getCustomer(Integer userID) {
-    //     if (userID == null) {
-    //         throw new IllegalArgumentException("user ID cannot be null");
-    //     }
+     public Customer getCustomer(Integer userID) {
+        if (userID == null) {
+            throw new IllegalArgumentException("user ID cannot be null");
+        }
 
-    //     return allCustomers.get(userID);
-    // }
+        return allCustomers.get(userID);
+    }
 
     public void setSavingsDailyWithdrawalLimit(double limit) {
         if (limit < 0) {
