@@ -139,9 +139,9 @@ public class Bank {
     public double getSavingsAnnualInterestRate() {
         return savingsAnnualInterestRate;
     }
-    public boolean validateCredentials(String username, int pin) {
+    public boolean validateCredentials(int userID, int pin) {
         for (Customer customer : allCustomers.values()) {
-            if (customer.getUsername().equals(username) && customer.getPin() == pin) {
+            if (customer.getUserID() == userID && customer.getPin() == pin) {
                 return true;
             }
         }
