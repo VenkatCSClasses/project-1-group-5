@@ -8,11 +8,11 @@ import java.util.Set;
 
 public class Bank {
 
-    private final Set<BankAccount> allAccounts;
-    private double totalCash;
+    public final Set<BankAccount> allAccounts;
+    public double totalCash;
 
-    private double savingsDailyWithdrawalLimit;
-    private double savingsAnnualInterestRate;
+    public double savingsDailyWithdrawalLimit;
+    public double savingsAnnualInterestRate;
 
     public Bank() {
         this.allAccounts = new HashSet<>();
