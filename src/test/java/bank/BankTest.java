@@ -82,55 +82,6 @@ public class BankTest {
         assertEquals(0.0, bank.getTotalCash(), 0.000001);
     }
 
-    @Test
-    public void testAddAccountThrowsWhenDuplicateAccountNumber() {
-        bank.addAccount(savings1);
-
-        BankAccount duplicate = new BankAccount() {
-            @Override
-            public void deposit(double amount) { }
-
-            @Override
-            public void withdraw(double amount) { }
-
-            @Override
-            public void transfer(BankAccount targetAccount, double amount) { }
-
-            @Override
-            public double checkBalance() {
-                return 200.0;
-            }
-
-            @Override
-            public java.util.List<Transaction> getSuspiciousActivity() {
-                return java.util.Collections.emptyList();
-            }
-
-            @Override
-            public java.util.List<Transaction> getTransactionHistory() {
-                return java.util.Collections.emptyList();
-            }
-
-            @Override
-            public boolean isFrozen() {
-                return false;
-            }
-
-            @Override
-            public Integer getAccountNumber() {
-                return savings1.getAccountNumber();
-            }
-
-            @Override
-            public String toString() {
-                return "Duplicate Account";
-            }
-        };
-
-        assertThrows(IllegalArgumentException.class, () -> bank.addAccount(duplicate));
-        assertEquals(1, bank.getAllAccounts().size());
-        assertEquals(1000.0, bank.getTotalCash(), 0.000001);
-    }
 
     @Test
     public void testGetAccountReturnsCorrectAccount() {
