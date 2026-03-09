@@ -1,5 +1,5 @@
 package bank;
-import static bank.Customer.allCustomers;
+
 
 import java.util.ArrayList;
 import java.util.List;

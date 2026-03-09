@@ -12,16 +12,15 @@ public class Customer {
     private ArrayList<BankAccount> accounts;
 
     private static final List<Customer> allCustomers = new ArrayList<>();
+    private static int nextUserID = 1;
 
-    public Customer(String username, int userID, int pin) {
+    public Customer(String username, int pin) {
         for (Customer customer : allCustomers) {
             if (customer.getUsername().equals(username)) {
                 throw new IllegalArgumentException("Username already exists.");
             }
-            if (customer.getUserID() == userID) {
-                throw new IllegalArgumentException("UserID already exists.");
-            }
         }
+
         if (pin < 0) {
             throw new IllegalArgumentException("Pin cannot be negative.");
         }
@@ -32,7 +31,9 @@ public class Customer {
         this.username = username;
         this.userType = 0;
         this.pin = pin;
-        this.userID = userID;
+        this.userID = nextUserID;
+        nextUserID++;
+
         this.accounts = new ArrayList<>();
         allCustomers.add(this);
     }
