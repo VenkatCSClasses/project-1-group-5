@@ -1,54 +1,51 @@
 package bank;
-import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import java.lang.IllegalArgumentException;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class AtmTest {
-    private Atm atm = new Atm("Main Street", 10);
 
-    @Test
-    void validateCredentialsTest(){
-        Customer customer = new Customer("Dena", 12345, 1234);
-        // valid credentials
-        boolean result1 = atm.validateCredentials(12345, 1234);
-        assert(result1);
-        // invalid credentials
-        boolean result2 = atm.validateCredentials(12345, 4321);
-        assert(!result2);
-        assertThrows(IllegalArgumentException.class, () -> {
-            atm.validateCredentials(12345, -1234); //negative pin
-        });
-        assertThrows(IllegalArgumentException.class, () -> {
-            atm.validateCredentials(12345, 12345); //pin with more than 4 digits
-        });
-        assertThrows(IllegalArgumentException.class, () -> {
-            atm.validateCredentials(12345, 0); //pin with less than 4 digits
-        });
+    private Bank bank;
+    private Atm atm;
+
+    @BeforeEach
+    void setUp() {
+        bank = new Bank();
+        atm = new Atm("Main Street", 10, bank);
     }
 
     @Test
-    void processTransactionTest(){
-        BankTeller bankTeller = new BankTeller();
-        Customer customer = new Customer("Dena", 12345, 1234);
-        bankTeller.createAccount(12345, 1000.0, 1);
-        // get the generated account number from customer
-        int accountNum = customer.getAccounts().values().iterator().next().getAccountNumber();
-        atm.processTransaction(accountNum, 500.0, 1); // deposit
-        assertEquals(1500.0, customer.checkBalance(accountNum));
-        atm.processTransaction(accountNum, 200.0,0); // withdrawal
-        assertEquals(1300.0, customer.checkBalance(accountNum));
-        //invalid cases
+    void validateCredentialsTest() {
+        Customer customer = new Customer("DenaATM2", 4321);
+        bank.addCustomer(customer);
+
+        assertTrue(atm.validateCredentials(customer.getUserID(), 4321));
+        assertFalse(atm.validateCredentials(customer.getUserID(), 1111));
+        assertFalse(atm.validateCredentials(customer.getUserID(), -1234));
+        assertFalse(atm.validateCredentials(customer.getUserID(), 12345));
+        assertFalse(atm.validateCredentials(customer.getUserID(), 0));
+    }
+
+    @Test
+    void processTransactionTest() {
+        Customer customer = new Customer("DenaATM1", 1234);
+        bank.addCustomer(customer);
+
+        Checking checking = new Checking(customer.getUserID(), 1000.0);
+        customer.addAccount(checking);
+
+        Atm.processTransaction(checking, 500.0, 1); // deposit
+        assertEquals(1500.0, customer.checkBalance(checking.getAccountNumber()));
+
+        Atm.processTransaction(checking, 200.0, 0); // withdraw
+        assertEquals(1300.0, customer.checkBalance(checking.getAccountNumber()));
+
         assertThrows(IllegalArgumentException.class, () -> {
-            atm.processTransaction(11111, 100.0, 1); //different account number
+            Atm.processTransaction(checking, 100.0, 99); // invalid transaction type
         });
-        assertThrows(IllegalArgumentException.class, ()-> {
-            atm.processTransaction(67890, -100.0, 1); //negative amount
-        });
-        assertThrows(IllegalArgumentException.class, ()-> {
-            atm.processTransaction(67890, 100.0, 99); //invalid transaction type
-        });
+    }
 }
-    }
