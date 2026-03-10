@@ -3,6 +3,7 @@ package bank;
 import java.util.List;
 import java.util.Scanner;
 
+
 public class Cli{
 
 
@@ -122,34 +123,86 @@ public class Cli{
             //Start by validating credentials for either a customer, teller, or admin
             System.out.println("Enter Customer ID:");
             String uid = scanner.nextLine();
-            int UserId = Integer.parseInt(uid);
-                   
+
+            while(true){ //while loop to validate that the customer ID is an integer
+                try{
+                    Integer.parseInt(uid);
+                    break; //break out of the loop if parsing is successful
+                }catch(NumberFormatException e){
+                    System.out.println("Invalid customer ID. Must be an integer.");
+                    System.out.println("Enter Customer ID:");   
+                    uid = scanner.nextLine();
+                }
+ 
+            }
+
+                 
             System.out.println("Enter PIN:");
             String pin = scanner.nextLine();
-            int UserPin = Integer.parseInt(pin);
 
-                //validate the customer's credentials
-            while (!testBank.validateCredentials(UserId, UserPin)) {
+            while (true){ //while loop to validate that the PIN is an integer
+                try{
+                    Integer.parseInt(pin);
+                    break; //break out of the loop if parsing is successful
+                }catch(NumberFormatException e){
+                    System.out.println("Invalid PIN. Must be an integer.");
+                    System.out.println("Enter PIN:");
+                    pin = scanner.nextLine();
+                }
+            
+            }
+
+            //validate the customer's credentials
+
+            int userID = Integer.parseInt(uid);
+            int userPin = Integer.parseInt(pin);
+
+            while (!testBank.validateCredentials(userID, userPin)) {
                 System.out.println("Invalid credentials. Please try again.");
+                // Ask for credentials again
                 System.out.println("Enter Customer ID:");
-                uid = scanner.nextLine();
-                UserId = Integer.parseInt(uid);
+                uid = scanner.nextLine();           
+                while(true){ //while loop to validate that the customer ID is an integer
+                    try{
+                        Integer.parseInt(uid);
+                        break; //break out of the loop if parsing is successful
+                    }catch(NumberFormatException e){
+                        System.out.println("Invalid customer ID. Must be an integer.");
+                        System.out.println("Enter Customer ID:");   
+                        uid = scanner.nextLine();
+                    }
+                }
+
                 System.out.println("Enter PIN:");
                 pin = scanner.nextLine();
-                UserPin = Integer.parseInt(pin);
+                while (true){ //while loop to validate that the PIN is an integer
+                    try{
+                        Integer.parseInt(pin);
+                        break; //break out of the loop if parsing is successful
+                    }catch(NumberFormatException e){
+                        System.out.println("Invalid PIN. Must be an integer.");
+                        System.out.println("Enter PIN:");
+                        pin = scanner.nextLine();
+                    }
+                
+                }
+
+                userID = Integer.parseInt(uid);
+                userPin = Integer.parseInt(pin);
+              
             }
 
             // If credentials are valid, log in the customer and display their account information
 
-            System.out.println("Login successful! Welcome, Customer " + UserId + "!");
-            Customer customerObject = testBank.getCustomer(UserId);
+            System.out.println("Login successful! Welcome, Customer " + userID + "!");
+            Customer customerObject = testBank.getCustomer(userID);
 
              // Login as either a customer, teller, or admin
             System.out.println("Where do you want to log in?. Select a number:");
             System.out.println("1.Customer ATM Login");
             System.out.println("2.Bank Admin Login");
             System.out.println("3.Bank Teller Login");
-            System.out.println("3.Exit");
+            System.out.println("4.Exit");
             String choice = scanner.nextLine();
 
             while(choice!="1" && choice!="2" && choice!="3" && choice!="4"){
@@ -417,12 +470,13 @@ public class Cli{
                     String accountNumCloseString = scanner.nextLine();
 
                     try{
-                        int accountNumCloseInt = Integer.parseInt(accountNumCloseString);
+                        Integer.parseInt(accountNumCloseString);
                     }catch(NumberFormatException e){
                         System.out.println("Invalid account number. Must be an integer.");
                         System.out.println("Enter account number of the account to close:");
                         accountNumCloseString = scanner.nextLine();
                     }
+                    int accountNumCloseInt = Integer.parseInt(accountNumCloseString);
 
                     //close account
                     try{
@@ -682,26 +736,8 @@ public class Cli{
                 }
             }
          
-        }
-
-
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
+
