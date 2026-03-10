@@ -16,46 +16,46 @@ public class Cli{
 
 
         //Test Customers
-        Customer testCustomer1 = new Customer("Luke Skywalker",78903);
+        Customer testCustomer1 = new Customer("Luke Skywalker",8903);
         int testCustomer1ID = testCustomer1.getUserID();
 
 
-        Customer testCustomer2 = new Customer("Chandeler", 12345);
+        Customer testCustomer2 = new Customer("Chandeler", 2345);
         int testCustomer2ID = testCustomer2.getUserID();
 
 
-        Customer testCustomer3 = new Customer("Rob Johnson", 54321);
+        Customer testCustomer3 = new Customer("Rob Johnson", 4321);
         int testCustomer3ID = testCustomer3.getUserID();
 
 
-        Customer testCustomer4 = new Customer("Emily Davis", 67890);
+        Customer testCustomer4 = new Customer("Emily Davis", 7890);
         int testCustomer4ID = testCustomer4.getUserID();
 
 
 
-        Customer testCustomer5 = new Customer("Sophia Lee", 98765);
+        Customer testCustomer5 = new Customer("Sophia Lee", 8765);
         int testCustomer5ID = testCustomer5.getUserID();
 
         //Test Tellers
-        BankTeller testTeller1 = new BankTeller("Teller1", 11901);
+        BankTeller testTeller1 = new BankTeller("Teller1", 1901);
         int testTeller1ID = testTeller1.getUserID();
 
 
-        BankTeller testTeller2 = new BankTeller("Teller2",89201);
+        BankTeller testTeller2 = new BankTeller("Teller2",9201);
         int testTeller2ID = testTeller2.getUserID(); 
 
 
-        BankTeller testTeller3 = new BankTeller("Teller3", 89213);   
+        BankTeller testTeller3 = new BankTeller("Teller3", 9213);   
         int testTeller3ID = testTeller3.getUserID(); 
         
         //Test Admins
-        BankAdmin testAdmin1 = new BankAdmin("Admin1", 64923);
+        BankAdmin testAdmin1 = new BankAdmin("Admin1", 4923);
         int testAdmin1ID = testAdmin1.getUserID();
 
-        BankAdmin testAdmin2 = new BankAdmin("Admin2", 46234);
+        BankAdmin testAdmin2 = new BankAdmin("Admin2", 6234);
         int testAdmin2ID = testAdmin2.getUserID();
 
-        BankAdmin testAdmin3 = new BankAdmin("Admin3", 49245); 
+        BankAdmin testAdmin3 = new BankAdmin("Admin3", 9245); 
         int testAdmin3ID = testAdmin3.getUserID();     
 
         //Test Atm
@@ -205,7 +205,7 @@ public class Cli{
             System.out.println("4.Exit");
             String choice = scanner.nextLine();
 
-            while(choice!="1" && choice!="2" && choice!="3" && choice!="4"){
+            while(!"1".equals(choice) && !"2".equals(choice) && !"3".equals(choice) && !"4".equals(choice)){
                 System.out.println("Invalid choice. Please try again.");
                 System.out.println("Where do you want to log in?. Select a number:");
                 System.out.println("1.Customer ATM Login");
@@ -220,6 +220,8 @@ public class Cli{
             // CUSTOMER LOGIN
             if (choiceInt == 1){
                 System.out.println("Customer ATM Login selected.");
+                Atm atmObject = testAtm1;
+
                 //Customer menu
                 while (true) {
 
@@ -230,7 +232,7 @@ public class Cli{
                     String accountChoice = scanner.nextLine();
             
                     // Validate account choice
-                    while(accountChoice != "1" && accountChoice != "2" && accountChoice != "3"){
+                    while(!"1".equals(accountChoice) && !"2".equals(accountChoice) && !"3".equals(accountChoice)){
                         System.out.println("Invalid choice. Please try again.");
                         System.out.println("Where do you want to log in?. Select a number:");
                         System.out.println("1.Checkings Account");
@@ -259,31 +261,42 @@ public class Cli{
                         //Access specific checkings account by account number
                         System.out.println("Enter an account number to access:");
                         String accountNum = scanner.nextLine();
+
+                        // Validate that the account number is an integer
+                        while(true){
+                            try{
+                                Integer.parseInt(accountNum);
+                                break; //break out of the loop if parsing is successful
+                            }catch(NumberFormatException e){
+                                System.out.println("Invalid account number. Must be an integer.");
+                                System.out.println("Enter an account number to access:");
+                                accountNum = scanner.nextLine();        
+                            }
+                        }
                         int accountNumInt = Integer.parseInt(accountNum);
 
-                        // Validate account number
-                        //while the account number is not in the customer's accounts list, ask for a valid account number
-                        while(!customerAccounts.contains(customerAccounts.stream().filter(a -> a.getAccountNumber() == accountNumInt).findFirst().orElse(null))){
-                            System.out.println("Invalid account number. Please try again.");
-                            System.out.println("Enter an account number to access:");
-                            accountNum = scanner.nextLine();
-                            accountNumInt = Integer.parseInt(accountNum);
+                        //get account object using the account number
+
+                        BankAccount selectedAccount = null;
+
+                        for (BankAccount account : customerAccounts) {
+                            if (account.getAccountNumber() == accountNumInt) {
+                                selectedAccount = account;
+                                 break;
+                            }
                         }
-
-                        //Selected Account
-                        BankAccount selectedAccount = customerAccounts.stream().filter(a -> a.getAccountNumber() == accountNumInt).findFirst().orElse(null);
-                        System.out.println("Account selected: " + selectedAccount);
-
-                        //Once a valid account number is entered..
+    
+               
+                        //Once an account number is entered..
                         System.out.println("What would you like to do? Select a number:");
                         System.out.println("1. Deposit");
                         System.out.println("2. Withdraw");
-                        System.out.println("4. Log out");
+                        System.out.println("3. Log out");
                         String customerChoice = scanner.nextLine();
     
 
                         // Validate customer choice
-                        while(customerChoice != "1" && customerChoice != "2" && customerChoice != "3"){
+                        while(!"1".equals(customerChoice) && !"2".equals(customerChoice) && !"3".equals(customerChoice)){
                             System.out.println("Invalid choice. Please try again.");
                             System.out.println("What would you like to do? Select a number:");
                             System.out.println("1. Deposit");
@@ -299,12 +312,42 @@ public class Cli{
                         if (customerChoiceInt == 1) {
                             System.out.println("Enter amount to deposit:");
                             String amount = scanner.nextLine();
+
+                            while(true){ //while loop to validate that the amount is a double
+                                try{
+                                    Double.parseDouble(amount);
+                                    break; //break out of the loop if parsing is successful
+                                }catch(NumberFormatException e){
+                                    System.out.println("Invalid amount. Must be a number.");
+                                    System.out.println("Enter amount to deposit:");
+                                    amount = scanner.nextLine();
+                                }
+                            }
                             double amountDouble = Double.parseDouble(amount);
-                            Atm.processTransaction(selectedAccount, amountDouble, 1);
-                            System.out.println("Deposit successful! New balance: $" + String.format("%.2f", selectedAccount.checkBalance()));
+                            
+                            try{
+                                Atm.processTransaction(selectedAccount, amountDouble, 1);
+                                System.out.println("Deposit successful! New balance:");
+                            }catch(IllegalArgumentException e){
+                                System.out.println(e.getMessage());
+                                continue; // skip the rest of the loop and start over
+                            }
+
+                        
                         } else if (customerChoiceInt == 2) {
                             System.out.println("Enter amount to withdraw:");
                             String amount = scanner.nextLine();
+
+                            while(true){ //while loop to validate that the amount is a double
+                                try{
+                                    Double.parseDouble(amount);
+                                    break; //break out of the loop if parsing is successful
+                                }catch(NumberFormatException e){
+                                    System.out.println("Invalid amount. Must be a number.");
+                                    System.out.println("Enter amount to withdraw:");
+                                    amount = scanner.nextLine();
+                                }
+                            }
                             double amountDouble = Double.parseDouble(amount);
                             Atm.processTransaction(selectedAccount, amountDouble, 0);
                             System.out.println("Withdrawal successful! New balance: $" + String.format("%.2f", selectedAccount.checkBalance()));
@@ -327,19 +370,32 @@ public class Cli{
                         // Access specific savings account by account number
                         System.out.println("Enter an account number to access:");
                         String accountNum = scanner.nextLine();
-                        int accountNumInt = Integer.parseInt(accountNum);       
 
-                        // Validate account number
-                        //while the account number is not in the customer's accounts list, ask for a valid account number
-                        while(!customerAccounts.contains(customerAccounts.stream().filter(a -> a.getAccountNumber() == accountNumInt).findFirst().orElse(null))){
-                            System.out.println("Invalid account number. Please try again.");
-                            System.out.println("Enter an account number to access:");
-                            accountNum = scanner.nextLine();
-                            accountNumInt = Integer.parseInt(accountNum);
+                        while(true){ //validate account number
+                            try{
+                                Integer.parseInt(accountNum);
+                                break; //break out of the loop if parsing is successful
+                            }catch(NumberFormatException e){
+                                System.out.println("Invalid account number. Must be an integer.");
+                                System.out.println("Enter an account number to access:");
+                                accountNum = scanner.nextLine();        
+                            }
+
+                        }
+                        int accountNumInt = Integer.parseInt(accountNum); 
+                        
+                           //get account object using the account number
+
+                        BankAccount selectedAccount = null;
+
+                        for (BankAccount account : customerAccounts) {
+                            if (account.getAccountNumber() == accountNumInt) {
+                                selectedAccount = account;
+                                 break;
+                            }
                         }
 
-                        //Selected Account
-                        BankAccount selectedAccount = customerAccounts.stream().filter(a -> a.getAccountNumber() == accountNumInt).findFirst().orElse(null);
+                  
                         System.out.println("Account selected: " + selectedAccount); 
 
                         //Once a valid account number is entered..
@@ -350,7 +406,7 @@ public class Cli{
                         String customerChoice = scanner.nextLine();
     
                         // Validate customer choice
-                        while(customerChoice != "1" && customerChoice != "2" && customerChoice != "3"){
+                        while(!"1".equals(customerChoice) && !"2".equals(customerChoice) && !"3".equals(customerChoice)){
                             System.out.println("Invalid choice. Please try again.");
                             System.out.println("What would you like to do? Select a number:");
                             System.out.println("1. Deposit");
@@ -365,12 +421,34 @@ public class Cli{
                         if (customerChoiceInt == 1) {
                             System.out.println("Enter amount to deposit:");
                             String amount = scanner.nextLine();
+
+                            while(true){ //while loop to validate that the amount is a double
+                                try{
+                                    Double.parseDouble(amount);
+                                    break; //break out of the loop if parsing is successful
+                                }catch(NumberFormatException e){
+                                    System.out.println("Invalid amount. Must be a number.");
+                                    System.out.println("Enter amount to deposit:");
+                                    amount = scanner.nextLine();
+                                }
+                            }
                             double amountDouble = Double.parseDouble(amount);
+
                             Atm.processTransaction(selectedAccount, amountDouble, 1);
                             System.out.println("Deposit successful! New balance: $" + String.format("%.2f", selectedAccount.checkBalance()));
                         } else if (customerChoiceInt == 2) {
                             System.out.println("Enter amount to withdraw:");
                             String amount = scanner.nextLine();
+                            while(true){ //while loop to validate that the amount is a double
+                                try{
+                                    Double.parseDouble(amount);
+                                    break; //break out of the loop if parsing is successful
+                                }catch(NumberFormatException e){
+                                    System.out.println("Invalid amount. Must be a number.");
+                                    System.out.println("Enter amount to withdraw:");
+                                    amount = scanner.nextLine();
+                                }
+                            }
                             double amountDouble = Double.parseDouble(amount);           
                             Atm.processTransaction(selectedAccount, amountDouble, 0);
                             System.out.println("Withdrawal successful! New balance: $" + String.format("%.2f", selectedAccount.checkBalance()));
@@ -379,13 +457,16 @@ public class Cli{
                             break;
                         }
 
-                    }    }  
+                    }   
+               }  
     
             }else if (choiceInt == 2){
                 System.out.println("Admin Login selected.");
                 // Admin menu
+                //get admin object using the userID
+                BankAdmin adminObject = (BankAdmin) testBank.getCustomer(userID);
 
-                Customer adminObject = customerObject;
+               
 
                 System.out.println("What would you like to do? Select a number:");
                 System.out.println("1. Create Account");
@@ -397,7 +478,7 @@ public class Cli{
                 String employeeChoice = scanner.nextLine();
     
 
-                while(employeeChoice != "1" && employeeChoice != "2" && employeeChoice != "3" && employeeChoice != "4" && employeeChoice != "5" && employeeChoice != "6"    ){
+                while(!"1".equals(employeeChoice) && !"2".equals(employeeChoice) && !"3".equals(employeeChoice) && !"4".equals(employeeChoice) && !"5".equals(employeeChoice) && !"6".equals(employeeChoice)    ){
                     System.out.println("Invalid choice. Please try again.");
                     System.out.println("What would you like to do? Select a number:");
                     System.out.println("1. Create Account");
@@ -444,6 +525,8 @@ public class Cli{
                             initialDeposit = scanner.nextLine();
                         }
                     }
+                    int customerIdInt = Integer.parseInt(customerId);
+                    double initialDepositDouble = Double.parseDouble(initialDeposit);
                     
 
 
@@ -460,8 +543,13 @@ public class Cli{
                     }
 
                     //create account 
-                    adminObject.createAccount(customerIdInt, initialDepositDouble, accountTypeInt);
-
+                    try{
+                        adminObject.createAccount(customerIdInt, initialDepositDouble, accountTypeInt);
+                        System.out.println("Account created successfully!");
+                    }
+                    catch(IllegalArgumentException e){
+                        System.out.println(e.getMessage());
+                    }
                 }else if (employeeChoiceInt == 2){
                     System.out.println("Close account");
                     //get Account number
@@ -521,15 +609,20 @@ public class Cli{
                         transactionType = scanner.nextLine();       
                     }
 
+                    int accountNumInt = Integer.parseInt(accountNum);
+                    double amountDouble = Double.parseDouble(amount);
+                    int transactionTypeInt = Integer.parseInt(transactionType);
+
+
                     //process transaction
                     try{
                         adminObject.processTransaction(accountNumInt, amountDouble, transactionTypeInt);
                         System.out.println("Transaction successful!");
                     }catch(IllegalArgumentException e){
                         System.out.println(e.getMessage());
-                    }catch(NumberFormatException e){
-                        System.out.println("Invalid input. Please try again."); 
                     }
+                }
+
 
                 else if(employeeChoiceInt == 4){
                     System.out.println("Calculate Total Assets selected.");
@@ -540,49 +633,65 @@ public class Cli{
                     System.out.println("Enter account number to toggle freeze:");
                     String accountNumFreezeString = scanner.nextLine();
 
+                    while(true){
+                         try{
+                            Integer.parseInt(accountNumFreezeString);
+                            break; //break out of the loop if parsing is successful
+                        }catch(NumberFormatException e){
+                            System.out.println("Invalid account number. Must be an integer.");
+                            System.out.println("Enter account number to toggle freeze:");
+                            accountNumFreezeString = scanner.nextLine();        
+                        }
+                    }
+                    int accountNumFreezeInt = Integer.parseInt(accountNumFreezeString);
                     try{
-                        int accountNumFreezeInt = Integer.parseInt(accountNumFreezeString);
                         adminObject.toggleFreezeAccount(accountNumFreezeInt);
-                        System.out.println("Account freeze status toggled successfully!");
-                    }catch(NumberFormatException e){
-                        System.out.println("Invalid account number. Must be an integer.");
-                    }catch(IllegalArgumentException e){
-                        System.out.println(e.getMessage()); 
-                        System.out.println("Enter account number to toggle freeze:");
-                        accountNumFreezeString = scanner.nextLine();
+                        System.out.println("Account freeze toggled successfully!");
+                    }catch(IllegalArgumentException e){   
+                        System.out.println(e.getMessage());
                     }
 
                 }else if(employeeChoiceInt == 6){
                     System.out.println("Get Suspicious Activity Report selected.");
                     System.out.println("Enter account number to view report:");
                     String accountNumReportString = scanner.nextLine();
+
+                    while(true){
+                        try{
+                            Integer.parseInt(accountNumReportString);
+                            break; //break out of the loop if parsing is successful
+                        }catch(NumberFormatException e){
+                            System.out.println("Invalid account number. Must be an integer.");
+                            System.out.println("Enter account number to view report:");
+                            accountNumReportString = scanner.nextLine();        
+                        }
+                    }
+                    int accountNumReportInt = Integer.parseInt(accountNumReportString);
                     try{
-                        int accountNumReportInt = Integer.parseInt(accountNumReportString);
                         List<Transaction> suspiciousActivity = adminObject.getSuspiciousActivityReport(accountNumReportInt);
                         if(suspiciousActivity.size() == 0){
                             System.out.println("No suspicious activity found for this account.");
-                        }else{
+                        }else{  
                             System.out.println("Suspicious activity for account " + accountNumReportInt + ":");
                             for (Transaction transaction : suspiciousActivity) {
                                 System.out.println(transaction);
                             }
                         }
-                    }catch(NumberFormatException e){
-                        System.out.println("Invalid account number. Must be an integer.");
-                    }catch(IllegalArgumentException e){
-                        System.out.println(e.getMessage());     
-                    
+                    }catch(IllegalArgumentException e){  
+                        System.out.println(e.getMessage());
                     }
                 }else if(employeeChoiceInt == 7){
                     System.out.println("Logging out...");
                     break;        
                 }
-            }
-
-              
-            }else if (choiceInt == 3){
+            
+     
+            }else if(choiceInt == 3){
                 System.out.println("Teller Login selected.");
                 // Teller menu
+
+                //get teller object using the userID
+                BankTeller tellerObject = (BankTeller) testBank.getCustomer(userID);
 
                 System.out.println("What would you like to do? Select a number:");
                 System.out.println("1. Create Account");
@@ -592,7 +701,7 @@ public class Cli{
                 String tellerChoice = scanner.nextLine();
     
 
-                while(tellerChoice != "1" && tellerChoice != "2" && tellerChoice != "3" && tellerChoice != "4"){
+                while(!"1".equals(tellerChoice) && !"2".equals(tellerChoice) && !"3".equals(tellerChoice) && !"4".equals(tellerChoice)){
                     System.out.println("Invalid choice. Please try again.");
                     System.out.println("What would you like to do? Select a number:");
                     System.out.println("1. Create Account");
@@ -651,7 +760,11 @@ public class Cli{
                         accountTypeInt = Integer.parseInt(accountType);
                     }
 
-                    BankTeller.createAccount(tellerCustomerId, initialDepositDouble, accountTypeInt);
+                    int tellerCustomerId = Integer.parseInt(customerId);
+                    double initialDepositDouble = Double.parseDouble(initialDeposit);
+
+
+                    tellerObject.createAccount(tellerCustomerId, initialDepositDouble, accountTypeInt);
                 }else if(tellerChoiceInt == 2){
                     System.out.println("Close Account selected.");
                     // Create account logic here
@@ -661,7 +774,7 @@ public class Cli{
 
                     while(true){ //while loop to validate that the account number is an integer
                         try{
-                            int tellerAccountNumber = Integer.parseInt(accountNumber);
+                            Integer.parseInt(accountNumber);
                             break; //break out of the loop if parsing is successful
                         }catch(NumberFormatException e){
                             System.out.println("Invalid account number. Must be an integer.");
@@ -669,75 +782,132 @@ public class Cli{
                             accountNumber = scanner.nextLine();
                         }
                     }
+                    int tellerAccountNumber = Integer.parseInt(accountNumber);
 
-                    BankTeller.closeAccount(tellerAccountNumber);
+                    tellerObject.closeAccount(tellerAccountNumber);
                 }else if(tellerChoiceInt == 3){
                     System.out.println("Process Transaction selected.");
                     // Process transaction logic here
                     System.out.println("Enter an account number to access:");
-                        String accountNum = scanner.nextLine();
-                        int accountNumInt = Integer.parseInt(accountNum);       
+                    String accountNum = scanner.nextLine();
+                    
 
-                        // Validate account number
-                        //while the account number is not in the customer's accounts list, ask for a valid account number
-                        while(!customerAccounts.contains(customerAccounts.stream().filter(a -> a.getAccountNumber() == accountNumInt).findFirst().orElse(null))){
-                            System.out.println("Invalid account number. Please try again.");
+                    // Validate account number
+
+                    while(true){
+                         try{
+                            Integer.parseInt(accountNum);
+                            break; //break out of the loop if parsing is successful
+                        }catch(NumberFormatException e){
+                            System.out.println("Invalid account number. Must be an integer.");
                             System.out.println("Enter an account number to access:");
-                            accountNum = scanner.nextLine();
-                            accountNumInt = Integer.parseInt(accountNum);
+                            accountNum = scanner.nextLine();        
                         }
+                    }
+                    int accountNumInt = Integer.parseInt(accountNum);
 
-                        //Selected Account
-                        BankAccount selectedAccount = customerAccounts.stream().filter(a -> a.getAccountNumber() == accountNumInt).findFirst().orElse(null);
-                        System.out.println("Account selected: " + selectedAccount); 
-
-                        //Once a valid account number is entered..
+    
+                    //Once a valid account number is entered..
+                    System.out.println("What would you like to do? Select a number:");
+                    System.out.println("1. Deposit");
+                    System.out.println("2. Withdraw");
+                    System.out.println("3. Log out");
+                    String customerChoice = scanner.nextLine();
+    
+                        // Validate customer choice
+                    while(!"1".equals(customerChoice) && !"2".equals(customerChoice) && !"3".equals(customerChoice)){
+                        System.out.println("Invalid choice. Please try again.");
                         System.out.println("What would you like to do? Select a number:");
                         System.out.println("1. Deposit");
                         System.out.println("2. Withdraw");
                         System.out.println("3. Log out");
-                        String customerChoice = scanner.nextLine();
-    
-                        // Validate customer choice
-                        while(customerChoice != "1" && customerChoice != "2" && customerChoice != "3"){
-                            System.out.println("Invalid choice. Please try again.");
-                            System.out.println("What would you like to do? Select a number:");
-                            System.out.println("1. Deposit");
-                            System.out.println("2. Withdraw");
-                            System.out.println("3. Log out");
-                            customerChoice = scanner.nextLine();
+                        customerChoice = scanner.nextLine();
+                     }
+
+                    int customerChoiceInt = Integer.parseInt(customerChoice);
+
+                    // Perform the selected action
+                    if (customerChoiceInt == 1) {
+                        System.out.println("Enter amount to deposit:");
+                        String amount = scanner.nextLine();
+
+                        // Validate amount
+                        while(true){ //while loop to validate that the amount is a double
+                            try{
+                                Double.parseDouble(amount);
+                                break; //break out of the loop if parsing is successful 
+                            }catch(NumberFormatException e){
+                                System.out.println("Invalid amount. Must be a number.");
+                                System.out.println("Enter amount to deposit:");
+                                amount = scanner.nextLine();
+                            }
+                        }
+                        double amountDouble = Double.parseDouble(amount);
+
+                        //try process transaction and catch any exceptions thrown by invalid transaction types or account numbers
+                        try{        
+                            tellerObject.processTransaction(accountNumInt, amountDouble, 1);
+                            System.out.println("Deposit successful!");
+                        }catch(IllegalArgumentException e){
+                            System.out.println(e.getMessage());
                         }
 
-                        int customerChoiceInt = Integer.parseInt(customerChoice);
-
-                        // Perform the selected action
-                        if (customerChoiceInt == 1) {
-                            System.out.println("Enter amount to deposit:");
-                            String amount = scanner.nextLine();
-                            double amountDouble = Double.parseDouble(amount);
-                            Atm.processTransaction(selectedAccount, amountDouble, 1);
-                            System.out.println("Deposit successful! New balance: $" + String.format("%.2f", selectedAccount.checkBalance()));
                         } else if (customerChoiceInt == 2) {
                             System.out.println("Enter amount to withdraw:");
                             String amount = scanner.nextLine();
-                            double amountDouble = Double.parseDouble(amount);           
-                            Atm.processTransaction(selectedAccount, amountDouble, 0);
-                            System.out.println("Withdrawal successful! New balance: $" + String.format("%.2f", selectedAccount.checkBalance()));
+
+                            // Validate amount
+                            while(true){ //while loop to validate that the amount is a double
+                                try{
+                                    Double.parseDouble(amount);
+                                    break; //break out of the loop if parsing is successful
+                                }catch(NumberFormatException e){
+                                    System.out.println("Invalid amount. Must be a number.");
+                                    System.out.println("Enter amount to withdraw:");            
+                                    amount = scanner.nextLine();
+                                }
+                            }
+                            double amountDouble = Double.parseDouble(amount);      
+                            
+                            try{        
+                                tellerObject.processTransaction(accountNumInt, amountDouble, 2);
+                                System.out.println("Withdrawal successful!");
+                            }catch(IllegalArgumentException e){
+                                System.out.println(e.getMessage());
+                            }   
+                          
                         } else if (customerChoiceInt == 3) {
                             System.out.println("Logging out...");
                             break;
                         }
-
                     }  
                   
                 }else{
                     System.out.println("Logging out...");
                     break;
                 }
+                scanner.close();
             }
          
     }
 
+    private static boolean hasAccountNumber(List<BankAccount> accounts, int accountNum) {
+        for (BankAccount account : accounts) {
+            if (account.getAccountNumber() == accountNum) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static BankAccount findAccountByNumber(List<BankAccount> accounts, int accountNum) {
+        for (BankAccount account : accounts) {
+            if (account.getAccountNumber() == accountNum) {
+                return account;
+            }
+        }
+        return null;
+    }
 
 }
 

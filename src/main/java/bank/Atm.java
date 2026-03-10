@@ -12,6 +12,14 @@ public class Atm {
         this.bank = bank;
     }
 
+    public String getLocation() {
+        return location;
+    }
+
+    public int getAtmID() {
+        return atmID;
+    }
+
     //log in for users, specifically customers but tellers and admins can use this as well
     public boolean validateCredentials(int cID, int inputPin){
         return bank.validateCredentials(cID, inputPin);

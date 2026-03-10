@@ -11,15 +11,15 @@ public class BankAdminTest {
     @org.junit.jupiter.api.BeforeEach
     void setUp() {
         bank = new Bank();
-        bankTeller = new BankTeller();
-        bankAdmin = new BankAdmin();
+        bankTeller = new BankTeller("Test Teller", 9087);
+        bankAdmin = new BankAdmin("Admin User", 1893);
     }
 
     @Test
     void createAccountTest(){
         bankTeller.createAccount(1, 1000.0, 1);
         // at least one account should exist in the static registry
-        org.junit.jupiter.api.Assertions.assertFalse(Bank.allAccounts.isEmpty());
+        org.junit.jupiter.api.Assertions.assertFalse(bank.getAllAccounts().isEmpty());
     }
 
     @Test

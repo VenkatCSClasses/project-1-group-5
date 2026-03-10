@@ -7,7 +7,6 @@ import java.util.List;
 public class Customer {
     private String username;
     private int pin;
-    private int userType;
     private int userID;
     private ArrayList<BankAccount> accounts;
 
@@ -29,7 +28,6 @@ public class Customer {
         }
 
         this.username = username;
-        this.userType = 0;
         this.pin = pin;
         this.userID = nextUserID;
         nextUserID++;

@@ -90,4 +90,18 @@ public class BankAdmin extends Customer{
         }
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void changePin(int newPin){
+        if (String.valueOf(newPin).length() != 4) {
+            throw new IllegalArgumentException("Pin must be 4 digits.");
+        }
+        if (newPin < 0) {
+            throw new IllegalArgumentException("Pin cannot be negative.");
+        }
+        this.pin = newPin;
+     }
+
 }

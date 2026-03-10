@@ -6,7 +6,6 @@ import java.util.List;
 public class BankTeller extends Customer{
     private String username;
     private int pin;
-    private int userType; // 0 for customer, 1 for teller, 2 for admin
     private int userID;
 
     private static final List<Customer> allCustomers = new ArrayList<>();
@@ -27,7 +26,6 @@ public class BankTeller extends Customer{
         if (pin < 0) {
             throw new IllegalArgumentException("Pin cannot be negative.");
         }
-        this.userType = 1; // set user type to teller
     }
     public void createAccount(int customerID, double initialDeposit, int accountType){
         if (accountType == 1) {
@@ -62,4 +60,21 @@ public class BankTeller extends Customer{
             throw new IllegalArgumentException("Account does not exist");
         }
     }
-}
+
+    public void changePin(int newPin){
+        if (String.valueOf(newPin).length() != 4) {
+            throw new IllegalArgumentException("Pin must be 4 digits.");
+        }
+        if (newPin < 0) {
+            throw new IllegalArgumentException("Pin cannot be negative.");
+        }
+        this.pin = newPin;
+     }
+
+
+
+
+
+
+ }
+
