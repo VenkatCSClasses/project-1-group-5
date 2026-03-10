@@ -10,29 +10,107 @@ public class Cli{
         
         
        // Create some test data
-        //Test Customers
-        Customer testCustomer1 = new Customer("John Doe",);
-   
-
-        //Test Accounts
-        BankAccount testAccount1 = new Checking(12345, 1000.0);
-        BankAccount testAccount2 = new Savings(54321, 500.0);
-        BankAccount testAccount3 = new Checking(67890, 200.0);
-        BankAccount testAccount4 = new Savings(98765, 1000.0);
-       
-        // Create a test bank and add the test accounts to it
+       //Bank
         Bank testBank = new Bank();
-        testBank.addAccount(testAccount1);
-        testBank.addAccount(testAccount2);
-        testBank.addAccount(testAccount3);
-        testBank.addAccount(testAccount4);
+
+
+        //Test Customers
+        Customer testCustomer1 = new Customer("Luke Skywalker",78903);
+        int testCustomer1ID = testCustomer1.getUserID();
+
+
+        Customer testCustomer2 = new Customer("Chandeler", 12345);
+        int testCustomer2ID = testCustomer2.getUserID();
+
+
+        Customer testCustomer3 = new Customer("Rob Johnson", 54321);
+        int testCustomer3ID = testCustomer3.getUserID();
+
+
+        Customer testCustomer4 = new Customer("Emily Davis", 67890);
+        int testCustomer4ID = testCustomer4.getUserID();
+
+
+
+        Customer testCustomer5 = new Customer("Sophia Lee", 98765);
+        int testCustomer5ID = testCustomer5.getUserID();
+
+        //Test Tellers
+        BankTeller testTeller1 = new BankTeller("Teller1", 11901);
+        int testTeller1ID = testTeller1.getUserID();
+
+
+        BankTeller testTeller2 = new BankTeller("Teller2",89201);
+        int testTeller2ID = testTeller2.getUserID(); 
+
+
+        BankTeller testTeller3 = new BankTeller("Teller3", 89213);   
+        int testTeller3ID = testTeller3.getUserID(); 
+        
+        //Test Admins
+        BankAdmin testAdmin1 = new BankAdmin("Admin1", 64923);
+        int testAdmin1ID = testAdmin1.getUserID();
+
+        BankAdmin testAdmin2 = new BankAdmin("Admin2", 46234);
+        int testAdmin2ID = testAdmin2.getUserID();
+
+        BankAdmin testAdmin3 = new BankAdmin("Admin3", 49245); 
+        int testAdmin3ID = testAdmin3.getUserID();     
+
+        //Test Atm
+        Atm testAtm1 = new Atm("Main Street", 19301, testBank);
+        Atm testAtm2 = new Atm("Second Street", 76923, testBank);
+        Atm testAtm3 = new Atm("Third Street", 23624, testBank);
+
+
+        //Add customers, tellers, and admin objects  to the bank
+        testBank.addCustomer(testCustomer1);
+        testBank.addCustomer(testCustomer2);
+        testBank.addCustomer(testCustomer3);        
+        testBank.addCustomer(testCustomer4);
+        testBank.addCustomer(testCustomer5);    
+        testBank.addCustomer(testTeller1);
+        testBank.addCustomer(testTeller2);
+        testBank.addCustomer(testTeller3);
+        testBank.addCustomer(testAdmin1);
+        testBank.addCustomer(testAdmin2);
+        testBank.addCustomer(testAdmin3);   
+
        
-        // Create a test ATM
-        Atm tesAtm = new Atm("Main Street", 50921);
+        // Account Objects for customers
+        BankAccount customer1Checking = new Checking(testCustomer1ID, 1000.00);
+        int customer1CheckingNum = customer1Checking.getAccountNumber();
 
-        //Create a Bank Teller
+        BankAccount customer1Savings = new Savings(testCustomer1ID, 5000.00);
+        int customer1SavingsNum = customer1Savings.getAccountNumber();
 
-        //Create a Bank Admin
+        BankAccount customer2Checking = new Checking(testCustomer2ID, 2000.00);
+        int customer2CheckingNum = customer2Checking.getAccountNumber();
+
+        BankAccount customer3Savings = new Savings(testCustomer3ID, 3000.00);
+        int customer3SavingsNum = customer3Savings.getAccountNumber();
+
+        BankAccount customer4Checking = new Checking(testCustomer4ID, 4000.00);
+        int customer4CheckingNum = customer4Checking.getAccountNumber();
+
+        BankAccount customer5Savings = new Savings(testCustomer5ID, 6000.00);
+        int customer5SavingsNum = customer5Savings.getAccountNumber();
+
+        // Add accounts to customers    
+        testCustomer1.addAccount(customer1Checking);
+        testCustomer1.addAccount(customer1Savings);     
+        testCustomer2.addAccount(customer2Checking);
+        testCustomer3.addAccount(customer3Savings);
+        testCustomer4.addAccount(customer4Checking);
+        testCustomer5.addAccount(customer5Savings); 
+
+        // Add accounts to bank
+        testBank.addAccount(customer1Checking);
+        testBank.addAccount(customer1Savings);
+        testBank.addAccount(customer2Checking);
+        testBank.addAccount(customer3Savings);
+        testBank.addAccount(customer4Checking);
+        testBank.addAccount(customer5Savings);
 
 
         Scanner scanner = new Scanner(System.in);
@@ -51,7 +129,7 @@ public class Cli{
             int UserPin = Integer.parseInt(pin);
 
                 //validate the customer's credentials
-            while (!testBank.validateCustomerCredentials(UserId, UserPin)) {
+            while (!testBank.validateCredentials(UserId, UserPin)) {
                 System.out.println("Invalid credentials. Please try again.");
                 System.out.println("Enter Customer ID:");
                 uid = scanner.nextLine();
@@ -254,6 +332,8 @@ public class Cli{
                 System.out.println("Admin Login selected.");
                 // Admin menu
 
+                Customer adminObject = customerObject;
+
                 System.out.println("What would you like to do? Select a number:");
                 System.out.println("1. Create Account");
                 System.out.println("2. Close Account");
@@ -272,7 +352,8 @@ public class Cli{
                     System.out.println("3. Process Transaction");       
                     System.out.println("4. Calculate Total Assets");
                     System.out.println("5. Toggle Freeze Account");
-                    System.out.println("6. Log out");
+                    System.out.println("6. Get Suspicious Activity Report");
+                    System.out.println("7. Log out");
                     employeeChoice = scanner.nextLine();
 
                 }
@@ -325,54 +406,127 @@ public class Cli{
                         accountTypeInt = Integer.parseInt(accountType);
                     }
 
-                    BankAdmin.createAccount(customerIdInt, initialDepositDouble, accountTypeInt);
+                    //create account 
+                    adminObject.createAccount(customerIdInt, initialDepositDouble, accountTypeInt);
 
+                }else if (employeeChoiceInt == 2){
+                    System.out.println("Close account");
+                    //get Account number
 
+                    System.out.println("Enter account number of the account to close:");
+                    String accountNumCloseString = scanner.nextLine();
 
+                    try{
+                        int accountNumCloseInt = Integer.parseInt(accountNumCloseString);
+                    }catch(NumberFormatException e){
+                        System.out.println("Invalid account number. Must be an integer.");
+                        System.out.println("Enter account number of the account to close:");
+                        accountNumCloseString = scanner.nextLine();
+                    }
 
+                    //close account
+                    try{
+                        adminObject.closeAccount(accountNumCloseInt);
+                    }catch(NumberFormatException e){  
+                        System.out.println("Account does not exist.");
+                    }
 
+                }else if (employeeChoiceInt == 3){
+                    System.out.println("Process Transaction selected.");
+                    // Process transaction logic here
+                    System.out.println("Enter an account number to access:");
+                    String accountNum = scanner.nextLine();
 
+                    try{
+                        int accountNumInt = Integer.parseInt(accountNum);
+                    }catch(NumberFormatException e){
+                        System.out.println("Invalid account number. Must be an integer.");
+                        System.out.println("Enter an account number to access:");
+                        accountNum = scanner.nextLine();        
+                    }
+                    
+                    //get amount
+                    System.out.println("Enter amount:");
+                    String amount = scanner.nextLine();
+                    try{
+                        double amountDouble = Double.parseDouble(amount);
+                    }catch(NumberFormatException e){    
+                        System.out.println("Invalid amount. Must be a number.");
+                        System.out.println("Enter amount:");
+                        amount = scanner.nextLine();        
+                    }
 
+                    //get transaction type
+                    System.out.println("Enter transaction type (1 for Deposit, 2 for Withdraw):");
+                    String transactionType = scanner.nextLine();    
+                    try{
+                        int transactionTypeInt = Integer.parseInt(transactionType);
+                    }catch(NumberFormatException e){
+                        System.out.println("Invalid transaction type. Must be 1 for Deposit or 2 for Withdraw.");
+                        System.out.println("Enter transaction type (1 for Deposit, 2 for Withdraw):");
+                        transactionType = scanner.nextLine();       
+                    }
 
+                    //process transaction
+                    try{
+                        adminObject.processTransaction(accountNumInt, amountDouble, transactionTypeInt);
+                        System.out.println("Transaction successful!");
+                    }catch(IllegalArgumentException e){
+                        System.out.println(e.getMessage());
+                    }catch(NumberFormatException e){
+                        System.out.println("Invalid input. Please try again."); 
+                    }
 
+                else if(employeeChoiceInt == 4){
+                    System.out.println("Calculate Total Assets selected.");
+                    double totalAssets = adminObject.calculateTotalAssets();
+                    System.out.println("Total assets in the bank: $" + String.format("%.2f", totalAssets)); 
+                }else if(employeeChoiceInt == 5){
+                    System.out.println("Toggle Freeze Account selected.");
+                    System.out.println("Enter account number to toggle freeze:");
+                    String accountNumFreezeString = scanner.nextLine();
 
+                    try{
+                        int accountNumFreezeInt = Integer.parseInt(accountNumFreezeString);
+                        adminObject.toggleFreezeAccount(accountNumFreezeInt);
+                        System.out.println("Account freeze status toggled successfully!");
+                    }catch(NumberFormatException e){
+                        System.out.println("Invalid account number. Must be an integer.");
+                    }catch(IllegalArgumentException e){
+                        System.out.println(e.getMessage()); 
+                        System.out.println("Enter account number to toggle freeze:");
+                        accountNumFreezeString = scanner.nextLine();
+                    }
+
+                }else if(employeeChoiceInt == 6){
+                    System.out.println("Get Suspicious Activity Report selected.");
+                    System.out.println("Enter account number to view report:");
+                    String accountNumReportString = scanner.nextLine();
+                    try{
+                        int accountNumReportInt = Integer.parseInt(accountNumReportString);
+                        List<Transaction> suspiciousActivity = adminObject.getSuspiciousActivityReport(accountNumReportInt);
+                        if(suspiciousActivity.size() == 0){
+                            System.out.println("No suspicious activity found for this account.");
+                        }else{
+                            System.out.println("Suspicious activity for account " + accountNumReportInt + ":");
+                            for (Transaction transaction : suspiciousActivity) {
+                                System.out.println(transaction);
+                            }
+                        }
+                    }catch(NumberFormatException e){
+                        System.out.println("Invalid account number. Must be an integer.");
+                    }catch(IllegalArgumentException e){
+                        System.out.println(e.getMessage());     
+                    
+                    }
+                }else if(employeeChoiceInt == 7){
+                    System.out.println("Logging out...");
+                    break;        
+                }
             }
 
-                
-
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                }else if(employeeChoiceInt == 2){
-                    System.out.println("Admin Login selected.");
-                    // Admin login and menu logic here
-
-
-
-
-
-                }
-
-
-
-
-
-             
-            } else if (choiceInt == 3){
+              
+            }else if (choiceInt == 3){
                 System.out.println("Teller Login selected.");
                 // Teller menu
 
@@ -520,25 +674,15 @@ public class Cli{
                             break;
                         }
 
-                    }    
-                } 
-
-
-
-
-        
-
-
-
-
-
+                    }  
+                  
+                }else{
+                    System.out.println("Logging out...");
+                    break;
+                }
+            }
+         
         }
-
-
-
-
-
-
 
 
     }
