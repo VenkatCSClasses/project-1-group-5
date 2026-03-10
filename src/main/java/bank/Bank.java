@@ -31,12 +31,7 @@ public class Bank {
         return Collections.unmodifiableList(new ArrayList<>(instanceAccounts.values()));
     }
 
-    public void addCustomers(Customer customer) {
-    if (customer == null) {
-        throw new IllegalArgumentException("Customer cannot be null.");
-    }
-    allCustomers.put(customer.getUserID(), customer);
-    }
+  
 
     public double getTotalCash() {
         return totalCash;
