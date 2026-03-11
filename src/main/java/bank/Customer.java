@@ -3,6 +3,7 @@ package bank;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class Customer {
     private String username;
@@ -15,7 +16,7 @@ public class Customer {
 
     public Customer(String username, int pin) {
         for (Customer customer : allCustomers) {
-            if (customer.getUsername().equals(username)) {
+            if (Objects.equals(customer.getUsername(), username)) {
                 throw new IllegalArgumentException("Username already exists.");
             }
         }
