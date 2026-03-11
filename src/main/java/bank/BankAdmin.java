@@ -1,27 +1,14 @@
 package bank;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class BankAdmin extends Customer{
-    private String username;
-    private int pin;
+  
     private int userType; // 0 for customer, 1 for teller, 2 for admin
-    private int userID;
-
-    private static final List<Customer> allCustomers = new ArrayList<>();
 
     public BankAdmin(String username, int pin) {
         super(username, pin);
-        for (Customer customer : allCustomers) {
-            if (customer.getUsername().equals(username)) {
-                throw new IllegalArgumentException("Username already exists.");
-            }
-            if (customer.getUserID() == userID) {
-                throw new IllegalArgumentException("UserID already exists.");
-            }
-        }
         if (String.valueOf(pin).length() != 4) {
             throw new IllegalArgumentException("Pin must be 4 digits.");
         }
@@ -90,9 +77,7 @@ public class BankAdmin extends Customer{
         }
     }
 
-    public String getUsername() {
-        return username;
-    }
+
 
     public void changePin(int newPin){
         if (String.valueOf(newPin).length() != 4) {
@@ -101,7 +86,7 @@ public class BankAdmin extends Customer{
         if (newPin < 0) {
             throw new IllegalArgumentException("Pin cannot be negative.");
         }
-        this.pin = newPin;
+        super.changePin(super.getPin(), newPin);
      }
 
 }
