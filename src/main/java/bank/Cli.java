@@ -18,56 +18,56 @@ public class Cli{
         //Test Customers
         Customer testCustomer1 = new Customer("Luke Skywalker",8903);
         int testCustomer1ID = testCustomer1.getUserID();
-        System.out.println("Test Customer 1 ID: " + testCustomer1ID);
+        System.out.println("" + testCustomer1.getUsername() + " Customer ID: " + testCustomer1ID);
 
 
         Customer testCustomer2 = new Customer("Chandeler", 2345);
         int testCustomer2ID = testCustomer2.getUserID();
-        System.out.println("Test Customer 2 ID: " + testCustomer2ID);
+        System.out.println("" + testCustomer2.getUsername() + " Customer ID: " + testCustomer2ID);
 
 
         Customer testCustomer3 = new Customer("Rob Johnson", 4321);
         int testCustomer3ID = testCustomer3.getUserID();
-        System.out.println("Test Customer 3 ID: " + testCustomer3ID);
+        System.out.println("" + testCustomer3.getUsername() + " Customer ID: " + testCustomer3ID);
 
 
         Customer testCustomer4 = new Customer("Emily Davis", 7890);
         int testCustomer4ID = testCustomer4.getUserID();
-        System.out.println("Test Customer 4 ID: " + testCustomer4ID);
+        System.out.println("" + testCustomer4.getUsername() + " Customer ID: " + testCustomer4ID);
 
 
 
         Customer testCustomer5 = new Customer("Sophia Lee", 8765);
         int testCustomer5ID = testCustomer5.getUserID();
-        System.out.println("Test Customer 5 ID: " + testCustomer5ID);
+        System.out.println("" + testCustomer5.getUsername() + " Customer ID: " + testCustomer5ID);
 
         //Test Tellers
         BankTeller testTeller1 = new BankTeller("Teller1", 1901);
         int testTeller1ID = testTeller1.getUserID();
-        System.out.println("Test Teller 1 ID: " + testTeller1ID);
+        System.out.println("" + testTeller1.getUsername() + " Teller ID: " + testTeller1ID);
 
 
         BankTeller testTeller2 = new BankTeller("Teller2",9201);
         int testTeller2ID = testTeller2.getUserID(); 
-        System.out.println("Test Teller 2 ID: " + testTeller2ID);
+        System.out.println("" + testTeller2.getUsername() + " Teller ID: " + testTeller2ID);
 
 
         BankTeller testTeller3 = new BankTeller("Teller3", 9213);   
         int testTeller3ID = testTeller3.getUserID(); 
-        System.out.println("Test Teller 3 ID: " + testTeller3ID);
+        System.out.println("" + testTeller3.getUsername() + " Teller ID: " + testTeller3ID);
         
         //Test Admins
         BankAdmin testAdmin1 = new BankAdmin("Admin1", 4923);
         int testAdmin1ID = testAdmin1.getUserID();
-        System.out.println("Test Admin 1 ID: " + testAdmin1ID);
+        System.out.println("" + testAdmin1.getUsername() + " Admin ID: " + testAdmin1ID);
 
         BankAdmin testAdmin2 = new BankAdmin("Admin2", 6234);
         int testAdmin2ID = testAdmin2.getUserID();
-        System.out.println("Test Admin 2 ID: " + testAdmin2ID);
+        System.out.println("" + testAdmin2.getUsername() + " Admin ID: " + testAdmin2ID);
 
         BankAdmin testAdmin3 = new BankAdmin("Admin3", 9245); 
         int testAdmin3ID = testAdmin3.getUserID();     
-        System.out.println("Test Admin 3 ID: " + testAdmin3ID); 
+        System.out.println("" + testAdmin3.getUsername() + " Admin ID: " + testAdmin3ID); 
 
         //Test Atm
         Atm testAtm1 = new Atm("Main Street", 19301, testBank);
@@ -92,27 +92,27 @@ public class Cli{
         // Account Objects for customers
         BankAccount customer1Checking = new Checking(testCustomer1ID, 1000.00);
         int customer1CheckingNum = customer1Checking.getAccountNumber();
-        System.out.println("Customer 1 Checking Account Number: " + customer1CheckingNum);
+        System.out.println("" + testCustomer1.getUsername() + " Checking Account Number: " + customer1CheckingNum);
 
         BankAccount customer1Savings = new Savings(testCustomer1ID, 5000.00);
         int customer1SavingsNum = customer1Savings.getAccountNumber();
-        System.out.println("Customer 1 Savings Account Number: " + customer1SavingsNum);
+        System.out.println("" + testCustomer1.getUsername() + " Savings Account Number: " + customer1SavingsNum);
 
         BankAccount customer2Checking = new Checking(testCustomer2ID, 2000.00);
         int customer2CheckingNum = customer2Checking.getAccountNumber();
-        System.out.println("Customer 2 Checking Account Number: " + customer2CheckingNum);
+        System.out.println("" + testCustomer2.getUsername() + " Checking Account Number: " + customer2CheckingNum);
 
         BankAccount customer3Savings = new Savings(testCustomer3ID, 3000.00);
         int customer3SavingsNum = customer3Savings.getAccountNumber();
-        System.out.println("Customer 3 Savings Account Number: " + customer3SavingsNum);
+        System.out.println("" + testCustomer3.getUsername() + " Savings Account Number: " + customer3SavingsNum);
 
         BankAccount customer4Checking = new Checking(testCustomer4ID, 4000.00);
         int customer4CheckingNum = customer4Checking.getAccountNumber();
-        System.out.println("Customer 4 Checking Account Number: " + customer4CheckingNum);
+        System.out.println("" + testCustomer4.getUsername() + " Checking Account Number: " + customer4CheckingNum);
 
         BankAccount customer5Savings = new Savings(testCustomer5ID, 6000.00);
         int customer5SavingsNum = customer5Savings.getAccountNumber();
-        System.out.println("Customer 5 Savings Account Number: " + customer5SavingsNum);
+        System.out.println("" + testCustomer5.getUsername() + " Savings Account Number: " + customer5SavingsNum);
 
         // Add accounts to customers    
         testCustomer1.addAccount(customer1Checking);
@@ -170,8 +170,10 @@ public class Cli{
                 if (choiceInt == 1){
                     System.out.println("Customer ATM Login selected.");
                     Atm atmObject = testAtm1;
+                    System.out.println("You are logged into the ATM at " + atmObject.getLocation() + ".");
 
                     //Customer menu
+                    boolean leaveCustomerMenu = false;
                     while (true) {
 
                         int accountChoiceInt;
@@ -196,7 +198,7 @@ public class Cli{
                             }else{
                                 System.out.println("Your checking accounts:");
                                 for (BankAccount account : checkingAccounts) {
-                                    System.out.println(account);
+                                    System.out.println("You have " + checkingAccounts.size() + " checking account(s).");
                                 }        
                             } 
 
@@ -233,10 +235,26 @@ public class Cli{
                                     continue; // skip the rest of the loop and start over
                                 }
 
+                                int _cNext = postActionChoice(scanner);
+                                if (_cNext == 1) {
+                                    break; // return to account menu
+                                } else if (_cNext == 2) {
+                                    leaveCustomerMenu = true; // return to main menu
+                                    break;
+                                }
+
                             } else if (customerChoiceInt == 2) {
                                 double amountDouble = readDouble(scanner, "Enter amount to withdraw:");
                                 Atm.processTransaction(selectedAccount, amountDouble, 0);
                                 System.out.println("Withdrawal successful! New balance: $" + String.format("%.2f", selectedAccount.checkBalance()));
+
+                                int _cNext = postActionChoice(scanner);
+                                if (_cNext == 1) {
+                                    break; // return to account menu
+                                } else if (_cNext == 2) {
+                                    leaveCustomerMenu = true; // return to main menu
+                                    break;
+                                }
                             } else if (customerChoiceInt == 3) {
                                 System.out.println("Logging out...");
                                 break;
@@ -250,7 +268,7 @@ public class Cli{
                             }else{
                                 System.out.println("Your savings accounts:");
                                 for (BankAccount account : savingsAccounts) {
-                                    System.out.println(account);
+                                    System.out.println("You have " + savingsAccounts.size() + " savings account(s).");
                                 }        
                             }
 
@@ -278,23 +296,47 @@ public class Cli{
                                 double amountDouble = readDouble(scanner, "Enter amount to deposit:");
                                 Atm.processTransaction(selectedAccount, amountDouble, 1);
                                 System.out.println("Deposit successful! New balance: $" + String.format("%.2f", selectedAccount.checkBalance()));
+
+                                int _cNext = postActionChoice(scanner);
+                                if (_cNext == 1) {
+                                    break; // return to account menu
+                                } else if (_cNext == 2) {
+                                    leaveCustomerMenu = true; // return to main menu
+                                    break;
+                                }
                             } else if (customerChoiceInt == 2) {
                                 double amountDouble = readDouble(scanner, "Enter amount to withdraw:");
                                 Atm.processTransaction(selectedAccount, amountDouble, 0);
                                 System.out.println("Withdrawal successful! New balance: $" + String.format("%.2f", selectedAccount.checkBalance()));
+
+                                int _cNext = postActionChoice(scanner);
+                                if (_cNext == 1) {
+                                    break; // return to account menu
+                                } else if (_cNext == 2) {
+                                    leaveCustomerMenu = true; // return to main menu
+                                    break;
+                                }
                             } else if (customerChoiceInt == 3) {
                                 System.out.println("Logging out...");
                                 break;
                             }
 
-                        }   
-                }  
-        
-                }else if (choiceInt == 2){
+                        }
+                        if (leaveCustomerMenu) {
+                            break;
+                        }
+                    }
+
+                    }else if (choiceInt == 2){
                     System.out.println("Admin Login selected.");
                     // Admin menu
-                    //get admin object using the userID
-                    BankAdmin adminObject = (BankAdmin) testBank.getCustomer(userID);
+                    // get customer object and verify it's an admin before casting
+                    Customer possibleAdmin = testBank.getCustomer(userID);
+                    if (!(possibleAdmin instanceof BankAdmin)) {
+                        System.out.println("You are not an admin. Returning to role selection.");
+                        continue;
+                    }
+                    BankAdmin adminObject = (BankAdmin) possibleAdmin;
 
                     int employeeChoiceInt;
                     while (true) {
@@ -331,6 +373,12 @@ public class Cli{
                         catch(IllegalArgumentException e){
                             System.out.println(e.getMessage());
                         }
+
+                        int _next = postActionChoice(scanner);
+                        if (_next == 2) {
+                            System.out.println("Returning to main menu...");
+                            break;
+                        }
                     }else if (employeeChoiceInt == 2){
                         System.out.println("Close account");
                         int accountNumCloseInt = readInt(scanner, "Enter account number of the account to close:");
@@ -338,6 +386,12 @@ public class Cli{
                             adminObject.closeAccount(accountNumCloseInt);
                         }catch(IllegalArgumentException e){  
                             System.out.println(e.getMessage());
+                        }
+
+                        int _nextClose = postActionChoice(scanner);
+                        if (_nextClose == 2) {
+                            System.out.println("Returning to main menu...");
+                            break;
                         }
 
                     }else if (employeeChoiceInt == 3){
@@ -358,13 +412,22 @@ public class Cli{
                         }catch(IllegalArgumentException e){
                             System.out.println(e.getMessage());
                         }
-                    }
 
-
-                    else if(employeeChoiceInt == 4){
+                        int _nextTxn = postActionChoice(scanner);
+                        if (_nextTxn == 2) {
+                            System.out.println("Returning to main menu...");
+                            break;
+                        }
+                    }else if(employeeChoiceInt == 4){
                         System.out.println("Calculate Total Assets selected.");
                         double totalAssets = adminObject.calculateTotalAssets();
                         System.out.println("Total assets in the bank: $" + String.format("%.2f", totalAssets)); 
+
+                        int _nextAssets = postActionChoice(scanner);
+                        if (_nextAssets == 2) {
+                            System.out.println("Returning to main menu...");
+                            break;
+                        }
                     }else if(employeeChoiceInt == 5){
                         System.out.println("Toggle Freeze Account selected.");
                         int accountNumFreezeInt = readInt(scanner, "Enter account number to toggle freeze:");
@@ -373,6 +436,12 @@ public class Cli{
                             System.out.println("Account freeze toggled successfully!");
                         }catch(IllegalArgumentException e){   
                             System.out.println(e.getMessage());
+                        }
+
+                        int _nextToggle = postActionChoice(scanner);
+                        if (_nextToggle == 2) {
+                            System.out.println("Returning to main menu...");
+                            break;
                         }
 
                     }else if(employeeChoiceInt == 6){
@@ -391,6 +460,12 @@ public class Cli{
                         }catch(IllegalArgumentException e){  
                             System.out.println(e.getMessage());
                         }
+
+                        int _nextReport = postActionChoice(scanner);
+                        if (_nextReport == 2) {
+                            System.out.println("Returning to main menu...");
+                            break;
+                        }
                     }else if(employeeChoiceInt == 7){
                         System.out.println("Logging out...");
                         break;        
@@ -401,8 +476,13 @@ public class Cli{
                     System.out.println("Teller Login selected.");
                     // Teller menu
 
-                    //get teller object using the userID
-                    BankTeller tellerObject = (BankTeller) testBank.getCustomer(userID);
+                    // get customer object and verify it's a teller before casting
+                    Customer possibleTeller = testBank.getCustomer(userID);
+                    if (!(possibleTeller instanceof BankTeller)) {
+                        System.out.println("You are not a teller. Returning to role selection.");
+                        continue;
+                    }
+                    BankTeller tellerObject = (BankTeller) possibleTeller;
 
                     int tellerChoiceInt;
                     while (true) {
@@ -430,10 +510,22 @@ public class Cli{
                         }
 
                         tellerObject.createAccount(tellerCustomerId, initialDepositDouble, accountTypeInt);
+
+                        int _tNext = postActionChoice(scanner);
+                        if (_tNext == 2) {
+                            System.out.println("Returning to main menu...");
+                            break;
+                        }
                     }else if(tellerChoiceInt == 2){
                         System.out.println("Close Account selected.");
                         int tellerAccountNumber = readInt(scanner, "Enter account number to close:");
                         tellerObject.closeAccount(tellerAccountNumber);
+
+                        int _tClose = postActionChoice(scanner);
+                        if (_tClose == 2) {
+                            System.out.println("Returning to main menu...");
+                            break;
+                        }
                     }else if(tellerChoiceInt == 3){
                         System.out.println("Process Transaction selected.");
                         int accountNumInt = readInt(scanner, "Enter an account number to access:");
@@ -458,6 +550,12 @@ public class Cli{
                                 System.out.println(e.getMessage());
                             }
 
+                            int _tNextTxn = postActionChoice(scanner);
+                            if (_tNextTxn == 2) {
+                                System.out.println("Returning to main menu...");
+                                break;
+                            }
+
                         } else if (customerChoiceInt == 2) {
                             double amountDouble = readDouble(scanner, "Enter amount to withdraw:");
                             try{
@@ -466,6 +564,12 @@ public class Cli{
                             }catch(IllegalArgumentException e){
                                 System.out.println(e.getMessage());
                             }   
+
+                            int _tNextWithdraw = postActionChoice(scanner);
+                            if (_tNextWithdraw == 2) {
+                                System.out.println("Returning to main menu...");
+                                break;
+                            }
                         
                         } else if (customerChoiceInt == 3) {
                             System.out.println("Logging out...");
@@ -479,9 +583,11 @@ public class Cli{
             }
         }
 
-    }
+
     }
 
+
+}
     private static boolean hasAccountNumber(List<BankAccount> accounts, int accountNum) {
         for (BankAccount account : accounts) {
             if (account.getAccountNumber() == accountNum) {
@@ -522,6 +628,17 @@ public class Cli{
             } catch (NumberFormatException e) {
                 System.out.println("Invalid input. Please enter a number.");
             }
+        }
+    }
+    
+    private static int postActionChoice(Scanner scanner) {
+        while (true) {
+            System.out.println("Choose next action:");
+            System.out.println("1. Return to previous menu");
+            System.out.println("2. Return to main menu");
+            int c = readInt(scanner, "Enter choice:");
+            if (c == 1 || c == 2) return c;
+            System.out.println("Invalid choice. Please try again.");
         }
     }
 
