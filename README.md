@@ -19,3 +19,6 @@ Use Cases:
 1. Customer creates a checking account through the BankTeller, and then deposits money.
 2. Customer withdraws a large amount of money to an existing savings account, BankAdmin looks at a list of transactions, deems it suspicious and freezes account
 3. Customer transfers money to different account.
+
+Sequence Diagrams
+![Savings Sequence Diagram](AhmadSavingsSequenceDiagram.png)
