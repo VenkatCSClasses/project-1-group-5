@@ -121,6 +121,14 @@ public class Checking implements BankAccount {
     }
 
     @Override
+
+    /*
+    For every transaction, a new Transaction object is created and added to the transaction history.
+    If the amount to transfer is greater than the current balance, an IllegalArgumentException is thrown with the message "Insufficient funds!"
+    If the amount to transfer is less than or equal to 0, an IllegalArgumentException is thrown with the message "Transfer amount must be greater than 0!"
+    If the amount to transfer exceeds $5000.0, an IllegalArgumentException is thrown with the message "Transfer amount exceeds the
+    
+    */
     public void transfer(BankAccount targetAccount, double amount) {
 
         if(this.balance < amount){
