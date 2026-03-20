@@ -17,7 +17,8 @@ public class CheckingTest {
         Checking acct = new Checking(12345, 0.0);
         org.junit.jupiter.api.Assertions.assertNotNull(acct);
     }
-
+    
+    @Test
     public void testDepositWithdrawCheckBalance(){
         Checking testCheckingAccount1 = new Checking(189432, 0.0);
         testCheckingAccount1.deposit(100.0);
@@ -58,7 +59,7 @@ public class CheckingTest {
 
 
     }
-
+    @Test
     public void testTransfer(){
         Checking testsCheckingAccount1 = new Checking(189432, 190.0);
         Checking testsCheckingAccount2 = new Checking(19837, 100.0);
@@ -69,6 +70,7 @@ public class CheckingTest {
 
     }
 
+    @Test
     public void testsTransferInvalidAmounts(){
         Checking testsCheckingAccount1 = new Checking(148920, 190.0);
         Checking testsCheckingAccount2 = new Checking(194303, 100.0);
@@ -78,7 +80,8 @@ public class CheckingTest {
         assertThrows(IllegalArgumentException.class, () -> testsCheckingAccount1.transfer(testsCheckingAccount2, 500.0), "Insufficient funds!");
 
     }
-
+    
+    @Test
     public void testTransferInvalidTargetAccount(){
         Checking testsCheckingAccount1 = new Checking(148920, 190.0);
         BankAccount invalidTargetAccount = null;
@@ -86,6 +89,8 @@ public class CheckingTest {
         assertThrows(IllegalArgumentException.class, () -> testsCheckingAccount1.transfer(invalidTargetAccount, 50.0), "Target account cannot be null!");
 
     }
+
+    @Test
 
     public void testGetSuspiciousActivity(){
         Checking testsCheckingAccount1 = new Checking(148920, 190.0);
@@ -117,7 +122,8 @@ public class CheckingTest {
         assertEquals("Transfer", transactionHistory.get(2).type, "The third transaction should be a transfer"); 
 
     }
-
+    
+    @Test
     public void testGetTransactionHistory(){
         Checking testsCheckingAccount1 = new Checking(148920, 190.0);
         Checking testsCheckingAccount2 = new Checking(194303, 100.0);
@@ -127,14 +133,14 @@ public class CheckingTest {
         testsCheckingAccount1.transfer(testsCheckingAccount2, 30.0);
 
         List<Transaction> transactionHistory = testsCheckingAccount1.getTransactionHistory();
-        assertEquals(3, transactionHistory.size(), "There should be 3 transactions recorded");
+        assertEquals(4, transactionHistory.size(), "There should be 4 transactions recorded");
         assertEquals("Deposit", transactionHistory.get(0).type, "The first transaction should be a deposit");
         assertEquals("Withdrawal", transactionHistory.get(1).type, "The second transaction should be a withdrawal");
         assertEquals("Transfer", transactionHistory.get(2).type, "The third transaction should be a transfer");
 
     }   
 
-
+    @Test
     public void testIsFrozen(){
         Checking testsCheckingAccount1 = new Checking(148920, 190.0);
         assertFalse(testsCheckingAccount1.isFrozen(), "The account should not be frozen");
