@@ -9,7 +9,7 @@ Work Breakdown
 Who is doing what: (Testing + Implementation) <br>
 Dena - ATM and Customer classes, readme.md, Customer Sequence diagram, State Diagram <br>
 Baneet - BankTeller and BankAdmin Classes, Use Case Diagram <br>
-Faith - BankAccount, Transactions, Checking, Cli classes, Class Diagram <br>
+Faith - BankAccount, Transactions, Checking, Cli classes, Class Diagram, User Testing Script <br>
 Ahmad - Bank and Savings classes, fixed tests, Savings Sequence Diagram <br>
 
 Class Diagram by Faith
