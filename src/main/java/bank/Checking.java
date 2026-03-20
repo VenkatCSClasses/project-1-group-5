@@ -123,6 +123,18 @@ public class Checking implements BankAccount {
     @Override
     public void transfer(BankAccount targetAccount, double amount) {
 
+        if((targetAccount == null) || (targetAccount.getAccountNumber() == this.accountNum)){
+            int transactionID = (int) (Math.random() * 1000000);
+            int timestamp = (int) (System.currentTimeMillis() / 1000);
+            String type = "Transfer";
+            boolean status = false;
+            boolean suspiciousActivity = false;
+            Transaction newTransaction = new Transaction(transactionID, timestamp, type, amount, status, suspiciousActivity);
+            this.transactionHistory.add(newTransaction);
+            throw new IllegalArgumentException("Target account cannot be null or the same as the source account!");
+        } else
+            
+
         if(this.balance < amount){
             int transactionID = (int) (Math.random() * 1000000);
             int timestamp = (int) (System.currentTimeMillis() / 1000);
