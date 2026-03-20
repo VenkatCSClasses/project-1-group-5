@@ -133,7 +133,7 @@ public class CheckingTest {
         testsCheckingAccount1.transfer(testsCheckingAccount2, 30.0);
 
         List<Transaction> transactionHistory = testsCheckingAccount1.getTransactionHistory();
-        assertEquals(4, transactionHistory.size(), "There should be 4 transactions recorded");
+        assertEquals(3, transactionHistory.size(), "There should be 3 transactions recorded");
         assertEquals("Deposit", transactionHistory.get(0).type, "The first transaction should be a deposit");
         assertEquals("Withdrawal", transactionHistory.get(1).type, "The second transaction should be a withdrawal");
         assertEquals("Transfer", transactionHistory.get(2).type, "The third transaction should be a transfer");
