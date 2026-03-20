@@ -140,6 +140,8 @@ public class Checking implements BankAccount {
 
     @Override
     public void transfer(BankAccount targetAccount, double amount) {
+
+
         
         if(this.isFrozen){
             int transactionID = (int) (System.currentTimeMillis() % 10000000) + (int) (Math.random() * 1000000);

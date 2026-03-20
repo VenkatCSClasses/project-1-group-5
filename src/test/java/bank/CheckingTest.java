@@ -85,8 +85,7 @@ public class CheckingTest {
     public void testTransferInvalidTargetAccount(){
         Checking testsCheckingAccount1 = new Checking(148920, 190.0);
         BankAccount invalidTargetAccount = null;
-
-        assertThrows(IllegalArgumentException.class, () -> testsCheckingAccount1.transfer(invalidTargetAccount, 50.0), "Target account cannot be null!");
+        assertThrows(NullPointerException.class, () -> testsCheckingAccount1.transfer(invalidTargetAccount, 50.0), "Target account cannot be null!");
 
     }
 
@@ -191,6 +190,24 @@ public class CheckingTest {
         assertFalse(transactionHistory.get(1).transactionID == transactionHistory.get(2).transactionID);
         assertFalse(transactionHistory.get(0).transactionID == transactionHistory.get(2).transactionID);
   
+    }
+
+    @Test
+    public void testLimitboundaries(){
+        Checking testsCheckingAccount1 = new Checking(148920, 190.0);
+        Checking testsCheckingAccount2 = new Checking(194303, 100.0);
+
+        // test deposit at limit
+        assertThrows(IllegalArgumentException.class, () -> testsCheckingAccount1.deposit(5000.0), "Deposit amount exceeds the limit of $5000.0!");
+
+        // test withdrawal at limit
+        assertThrows(IllegalArgumentException.class, () -> testsCheckingAccount1.withdraw(5000.0), "Withdrawal amount exceeds the limit of $5000.0!");
+
+        // test transfer at limit
+        assertThrows(IllegalArgumentException.class, () -> testsCheckingAccount1.transfer(testsCheckingAccount2, 5000.0), "Transfer amount exceeds the limit of $5000.0!");
+
+        assertEquals(3, testsCheckingAccount1.getSuspiciousActivity().size(), "There should be 3 suspicious activity recorded");
+
     }
 
       
