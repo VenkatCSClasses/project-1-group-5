@@ -151,6 +151,52 @@ public class CheckingTest {
 
     }   
 
+    @Test
+    public void suspiciousActivityTrumpsInsufficientFunds(){
+        Checking testsCheckingAccount1 = new Checking(148920, 190.0);
+        Checking testsCheckingAccount2 = new Checking(194303, 100.0);
+
+        // trigger suspicious activity for transfer with insufficient funds
+        assertThrows(IllegalArgumentException.class, () -> testsCheckingAccount1.transfer(testsCheckingAccount2, 6000.0), "Transfer amount exceeds the limit of $5000.0!");
+        List<Transaction> suspiciousActivity = testsCheckingAccount1.getSuspiciousActivity();
+        assertEquals(1, suspiciousActivity.size(), "There should be 1 suspicious activity recorded");
+        assertEquals("Transfer", suspiciousActivity.get(0).type, "The suspicious activity should be a transfer");
+
+    }
+
+    @Test
+    public void testFrozenAccount(){
+        Checking testsCheckingAccount1 = new Checking(148920, 190.0);
+        testsCheckingAccount1.setFrozen(true);
+
+       
+        assertThrows(IllegalStateException.class, () -> testsCheckingAccount1.deposit(50.0), "Account is frozen!");
+        assertThrows(IllegalStateException.class, () -> testsCheckingAccount1.withdraw(20.0), "Account is frozen!");
+        assertThrows(IllegalStateException.class, () -> testsCheckingAccount1.transfer(new Checking(194303, 100.0), 30.0), "Account is frozen!");
+
+    }
+
+    public void testUniqueTransactionIDs(){
+        Checking testsCheckingAccount1 = new Checking(148920, 190.0);
+        Checking testsCheckingAccount2 = new Checking(194303, 100.0);
+
+        testsCheckingAccount1.deposit(50.0);
+        testsCheckingAccount1.withdraw(20.0);
+        testsCheckingAccount1.transfer(testsCheckingAccount2, 30.0);
+
+        List<Transaction> transactionHistory = testsCheckingAccount1.getTransactionHistory();
+        assertEquals(3, transactionHistory.size(), "There should be 3 transactions recorded");
+        assertFalse(transactionHistory.get(0).transactionID == transactionHistory.get(1).transactionID);
+        assertFalse(transactionHistory.get(1).transactionID == transactionHistory.get(2).transactionID);
+        assertFalse(transactionHistory.get(0).transactionID == transactionHistory.get(2).transactionID);
+  
+    }
+
+      
+
+
+
+
 
 
 
