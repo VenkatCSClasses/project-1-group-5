@@ -175,7 +175,8 @@ public class CheckingTest {
         assertThrows(IllegalStateException.class, () -> testsCheckingAccount1.transfer(new Checking(194303, 100.0), 30.0), "Account is frozen!");
 
     }
-
+    
+    @Test
     public void testUniqueTransactionIDs(){
         Checking testsCheckingAccount1 = new Checking(148920, 190.0);
         Checking testsCheckingAccount2 = new Checking(194303, 100.0);

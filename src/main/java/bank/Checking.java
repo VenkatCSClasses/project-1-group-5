@@ -33,9 +33,17 @@ public class Checking implements BankAccount {
         "Deposit amount must be greater than 0!".
          
         */
-
-         if(amount >= 5000.0){
-            int transactionID = (int) (Math.random() * 1000000);
+        if(this.isFrozen){
+            int transactionID = (int) (System.currentTimeMillis() % 10000000) + (int) (Math.random() * 1000000);
+            int timestamp = (int) (System.currentTimeMillis() / 1000);
+            String type = "Deposit";
+            boolean status = false;
+            boolean suspiciousActivity = false;
+            Transaction newTransaction = new Transaction(transactionID, timestamp, type, amount, status, suspiciousActivity);
+            this.transactionHistory.add(newTransaction);
+            throw new IllegalStateException("Account is frozen! Cannot perform transactions.");
+        }else if(amount >= 5000.0){
+            int transactionID = (int) (System.currentTimeMillis() % 10000000) + (int) (Math.random() * 1000000);
             int timestamp = (int) (System.currentTimeMillis() / 1000);
             String type = "Deposit";
             boolean status = false;
@@ -46,7 +54,7 @@ public class Checking implements BankAccount {
             throw new IllegalArgumentException("Deposit amount exceeds the limit of $5000.0!");
         }else if(amount <= 0){
 
-            int transactionID = (int) (Math.random() * 1000000);
+            int transactionID = (int) (System.currentTimeMillis() % 10000000) + (int) (Math.random() * 1000000);
             int timestamp = (int) (System.currentTimeMillis() / 1000);
             String type = "Deposit";
             boolean status = false;
@@ -58,7 +66,7 @@ public class Checking implements BankAccount {
 
             this.balance += amount;
 
-            int transactionID = (int) (Math.random() * 1000000);
+            int transactionID = (int) (System.currentTimeMillis() % 10000000) + (int) (Math.random() * 1000000);
             int timestamp = (int) (System.currentTimeMillis() / 1000);
             String type = "Deposit";
             boolean status = true;
@@ -78,8 +86,18 @@ public class Checking implements BankAccount {
         If the amount is less than or equal to 0, an IllegalArgumentException is thrown with the message "Withdrawal amount must be greater than 0!"
    
         */
-        if(amount >= 5000.0){
-            int transactionID = (int) (Math.random() * 1000000);
+
+        if(this.isFrozen){
+            int transactionID = (int) (System.currentTimeMillis() % 10000000) + (int) (Math.random() * 1000000);
+            int timestamp = (int) (System.currentTimeMillis() / 1000);
+            String type = "Withdrawal";
+            boolean status = false;
+            boolean suspiciousActivity = false;
+            Transaction newTransaction = new Transaction(transactionID, timestamp, type, amount, status, suspiciousActivity);
+            this.transactionHistory.add(newTransaction);
+            throw new IllegalStateException("Account is frozen! Cannot perform transactions.");
+        } else if(amount >= 5000.0){
+            int transactionID = (int) (System.currentTimeMillis() % 10000000) + (int) (Math.random() * 1000000);
             int timestamp = (int) (System.currentTimeMillis() / 1000);
             String type = "Withdrawal";
             boolean status = false;
@@ -90,7 +108,7 @@ public class Checking implements BankAccount {
 
             throw new IllegalArgumentException("Withdrawal amount exceeds the limit of $5000.0!");
         }else if(this.balance < amount){
-            int transactionID = (int) (Math.random() * 1000000);
+            int transactionID = (int) (System.currentTimeMillis() % 10000000) + (int) (Math.random() * 1000000);
             int timestamp = (int) (System.currentTimeMillis() / 1000);
             String type = "Withdrawal";
             boolean status = false;
@@ -99,7 +117,7 @@ public class Checking implements BankAccount {
             this.transactionHistory.add(newTransaction);
             throw new IllegalArgumentException("Insufficient funds!");
         }else if(amount <= 0){
-            int transactionID = (int) (Math.random() * 1000000);
+            int transactionID = (int) (System.currentTimeMillis() % 10000000) + (int) (Math.random() * 1000000);
             int timestamp = (int) (System.currentTimeMillis() / 1000);
             String type = "Withdrawal";
             boolean status = false;
@@ -108,7 +126,7 @@ public class Checking implements BankAccount {
             this.transactionHistory.add(newTransaction);
             throw new IllegalArgumentException("Withdrawal amount must be greater than 0!");
         }else {
-            int transactionID = (int) (Math.random() * 1000000);
+            int transactionID = (int) (System.currentTimeMillis() % 10000000) + (int) (Math.random() * 1000000);
             int timestamp = (int) (System.currentTimeMillis() / 1000);
             String type = "Withdrawal";
             boolean status = true;
@@ -122,9 +140,27 @@ public class Checking implements BankAccount {
 
     @Override
     public void transfer(BankAccount targetAccount, double amount) {
-
-        if((targetAccount == null) || (targetAccount.getAccountNumber() == this.accountNum)){
-            int transactionID = (int) (Math.random() * 1000000);
+        
+        if(this.isFrozen){
+            int transactionID = (int) (System.currentTimeMillis() % 10000000) + (int) (Math.random() * 1000000);
+            int timestamp = (int) (System.currentTimeMillis() / 1000);
+            String type = "Transfer";
+            boolean status = false;
+            boolean suspiciousActivity = false;
+            Transaction newTransaction = new Transaction(transactionID, timestamp, type, amount, status, suspiciousActivity);
+            this.transactionHistory.add(newTransaction);
+            throw new IllegalStateException("Account is frozen! Cannot perform transactions.");
+        }else if(targetAccount.isFrozen()){
+            int transactionID = (int) (System.currentTimeMillis() % 10000000) + (int) (Math.random() * 1000000);
+            int timestamp = (int) (System.currentTimeMillis() / 1000);
+            String type = "Transfer";
+            boolean status = false;
+            boolean suspiciousActivity = false;
+            Transaction newTransaction = new Transaction(transactionID, timestamp, type, amount, status, suspiciousActivity);
+            this.transactionHistory.add(newTransaction);
+            throw new IllegalStateException("Target account is frozen! Cannot perform transactions.");
+        } else if((targetAccount == null) || (targetAccount.getAccountNumber() == this.accountNum)){
+            int transactionID = (int) (System.currentTimeMillis() % 10000000) + (int) (Math.random() * 1000000);
             int timestamp = (int) (System.currentTimeMillis() / 1000);
             String type = "Transfer";
             boolean status = false;
@@ -132,10 +168,8 @@ public class Checking implements BankAccount {
             Transaction newTransaction = new Transaction(transactionID, timestamp, type, amount, status, suspiciousActivity);
             this.transactionHistory.add(newTransaction);
             throw new IllegalArgumentException("Target account cannot be null or the same as the source account!");
-        } else
-        
-        if (amount >= 5000.0){
-            int transactionID = (int) (Math.random() * 1000000);
+        } else if (amount >= 5000.0){
+            int transactionID = (int) (System.currentTimeMillis() % 10000000) + (int) (Math.random() * 1000000);
             int timestamp = (int) (System.currentTimeMillis() / 1000);
             String type = "Transfer";
             boolean status = false;
@@ -145,7 +179,7 @@ public class Checking implements BankAccount {
             this.suspiciousActivity.add(newTransaction);
             throw new IllegalArgumentException("Transfer amount exceeds the limit of $5000.0!");
         }else if(this.balance < amount){
-            int transactionID = (int) (Math.random() * 1000000);
+            int transactionID = (int) (System.currentTimeMillis() % 10000000) + (int) (Math.random() * 1000000);
             int timestamp = (int) (System.currentTimeMillis() / 1000);
             String type = "Transfer";
             boolean status = false;
@@ -154,7 +188,7 @@ public class Checking implements BankAccount {
             this.transactionHistory.add(newTransaction);
             throw new IllegalArgumentException("Insufficient funds!");
         }else if (amount <= 0){
-            int transactionID = (int) (Math.random() * 1000000);
+            int transactionID = (int) (System.currentTimeMillis() % 10000000) + (int) (Math.random() * 1000000);
             int timestamp = (int) (System.currentTimeMillis() / 1000);
             String type = "Transfer";
             boolean status = false;
@@ -163,7 +197,7 @@ public class Checking implements BankAccount {
             this.transactionHistory.add(newTransaction);
             throw new IllegalArgumentException("Transfer amount must be greater than 0!");
         } else{
-            int transactionID = (int) (Math.random() * 1000000);
+            int transactionID = (int) (System.currentTimeMillis() % 10000000) + (int) (Math.random() * 1000000);
             int timestamp = (int) (System.currentTimeMillis() / 1000);
             String type = "Transfer";
             boolean status = true;
@@ -178,7 +212,25 @@ public class Checking implements BankAccount {
 
     @Override
     public double checkBalance() {
-        return this.balance;
+        if(this.isFrozen){
+            int transactionID = (int) (System.currentTimeMillis() % 10000000) + (int) (Math.random() * 1000000);
+            int timestamp = (int) (System.currentTimeMillis() / 1000);
+            String type = "Check Balance";
+            boolean status = false;
+            boolean suspiciousActivity = false;
+            Transaction newTransaction = new Transaction(transactionID, timestamp, type, 0.0, status, suspiciousActivity);
+            this.transactionHistory.add(newTransaction);
+            throw new IllegalStateException("Account is frozen! Cannot perform any actions.");
+        }else{
+            int transactionID = (int) (System.currentTimeMillis() % 10000000) + (int) (Math.random() * 1000000);
+            int timestamp = (int) (System.currentTimeMillis() / 1000);
+            String type = "Check Balance";
+            boolean status = true;
+            boolean suspiciousActivity = false;
+            Transaction newTransaction = new Transaction(transactionID, timestamp, type, 0.0, status, suspiciousActivity);
+            this.transactionHistory.add(newTransaction);
+            return this.balance;
+        }
 
     }
 
