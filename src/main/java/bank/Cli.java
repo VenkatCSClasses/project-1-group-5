@@ -147,7 +147,7 @@ public class Cli{
 
             // If credentials are valid, log in the customer and display their account information
 
-            System.out.println("Login successful! Welcome, Customer " + userID + "!");
+            System.out.println("Login successful! Welcome, " + testBank.getCustomer(userID).getUsername() + "!");
             Customer customerObject = testBank.getCustomer(userID);
 
             //Make this a loop that continues until the customer chooses to log out
@@ -167,7 +167,12 @@ public class Cli{
                 }
 
                 // CUSTOMER LOGIN
-                if (choiceInt == 1){
+
+                if (choiceInt == 4){
+                    System.out.println("Exiting...");
+                    System.out.println("Thank you for choosing us! Goodbye!");
+                    System.exit(0);
+                } else if (choiceInt == 1){
                     System.out.println("Customer ATM Login selected.");
                     Atm atmObject = testAtm1;
                     System.out.println("You are logged into the ATM at " + atmObject.getLocation() + ".");
@@ -189,7 +194,9 @@ public class Cli{
 
                         if(accountChoiceInt == 3){
                             System.out.println("Logging out...");
-                            break;
+                            System.out.println("Thank you for choosing us! Goodbye!");
+                            System.exit(0);
+                            
                         }else if(accountChoiceInt == 1){ // Checkings account menu
                             List <BankAccount> customerAccounts = customerObject.getAccounts();
                             List <BankAccount> checkingAccounts = customerAccounts.stream().filter(account -> account instanceof Checking).toList();
@@ -257,7 +264,8 @@ public class Cli{
                                 }
                             } else if (customerChoiceInt == 3) {
                                 System.out.println("Logging out...");
-                                break;
+                                System.out.println("Thank you for choosing us! Goodbye!");
+                                System.exit(0);
                             }
 
                         }else if(accountChoiceInt == 2){ // Savings account menu
@@ -318,7 +326,8 @@ public class Cli{
                                 }
                             } else if (customerChoiceInt == 3) {
                                 System.out.println("Logging out...");
-                                break;
+                                System.out.println("Thank you for choosing us! Goodbye!");
+                                System.exit(0);
                             }
 
                         }
@@ -468,7 +477,8 @@ public class Cli{
                         }
                     }else if(employeeChoiceInt == 7){
                         System.out.println("Logging out...");
-                        break;        
+                        System.out.println("Thank you for choosing us! Goodbye!");
+                        System.exit(0);    
                     }
                 
         
@@ -573,21 +583,21 @@ public class Cli{
                         
                         } else if (customerChoiceInt == 3) {
                             System.out.println("Logging out...");
+                            System.out.println("Thank you for choosing us! Goodbye!");
+                            System.exit(0);
                         }
                     
                     }else{
                         System.out.println("Logging out...");
-                        break;
+                        System.out.println("Thank you for choosing us! Goodbye!");
+                        System.exit(0);
                     }
                 
             }
         }
-
-
     }
 
-
-}
+    }
     private static boolean hasAccountNumber(List<BankAccount> accounts, int accountNum) {
         for (BankAccount account : accounts) {
             if (account.getAccountNumber() == accountNum) {
@@ -641,6 +651,8 @@ public class Cli{
             System.out.println("Invalid choice. Please try again.");
         }
     }
+
+
 
 }
 
