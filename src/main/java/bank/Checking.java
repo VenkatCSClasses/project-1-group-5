@@ -34,17 +34,7 @@ public class Checking implements BankAccount {
          
         */
 
-        if(amount <= 0){
-
-            int transactionID = (int) (Math.random() * 1000000);
-            int timestamp = (int) (System.currentTimeMillis() / 1000);
-            String type = "Deposit";
-            boolean status = false;
-            boolean suspiciousActivity = false;
-            Transaction newTransaction = new Transaction(transactionID, timestamp, type, amount, status, suspiciousActivity);
-            this.transactionHistory.add(newTransaction);
-            throw new IllegalArgumentException("Deposit amount must be greater than 0!");
-        }else if(amount > 5000.0){
+         if(amount >= 5000.0){
             int transactionID = (int) (Math.random() * 1000000);
             int timestamp = (int) (System.currentTimeMillis() / 1000);
             String type = "Deposit";
@@ -54,6 +44,16 @@ public class Checking implements BankAccount {
             this.transactionHistory.add(newTransaction);
             this.suspiciousActivity.add(newTransaction);
             throw new IllegalArgumentException("Deposit amount exceeds the limit of $5000.0!");
+        }else if(amount <= 0){
+
+            int transactionID = (int) (Math.random() * 1000000);
+            int timestamp = (int) (System.currentTimeMillis() / 1000);
+            String type = "Deposit";
+            boolean status = false;
+            boolean suspiciousActivity = false;
+            Transaction newTransaction = new Transaction(transactionID, timestamp, type, amount, status, suspiciousActivity);
+            this.transactionHistory.add(newTransaction);
+            throw new IllegalArgumentException("Deposit amount must be greater than 0!");
         } else{
 
             this.balance += amount;
@@ -78,7 +78,18 @@ public class Checking implements BankAccount {
         If the amount is less than or equal to 0, an IllegalArgumentException is thrown with the message "Withdrawal amount must be greater than 0!"
    
         */
-        if(this.balance < amount){
+        if(amount >= 5000.0){
+            int transactionID = (int) (Math.random() * 1000000);
+            int timestamp = (int) (System.currentTimeMillis() / 1000);
+            String type = "Withdrawal";
+            boolean status = false;
+            boolean suspiciousActivity = true;
+            Transaction newTransaction = new Transaction(transactionID, timestamp, type, amount, status, suspiciousActivity);
+            this.transactionHistory.add(newTransaction);
+            this.suspiciousActivity.add(newTransaction);
+
+            throw new IllegalArgumentException("Withdrawal amount exceeds the limit of $5000.0!");
+        }else if(this.balance < amount){
             int transactionID = (int) (Math.random() * 1000000);
             int timestamp = (int) (System.currentTimeMillis() / 1000);
             String type = "Withdrawal";
@@ -96,17 +107,6 @@ public class Checking implements BankAccount {
             Transaction newTransaction = new Transaction(transactionID, timestamp, type, amount, status, suspiciousActivity);
             this.transactionHistory.add(newTransaction);
             throw new IllegalArgumentException("Withdrawal amount must be greater than 0!");
-        }else if(amount > 5000.0){
-            int transactionID = (int) (Math.random() * 1000000);
-            int timestamp = (int) (System.currentTimeMillis() / 1000);
-            String type = "Withdrawal";
-            boolean status = false;
-            boolean suspiciousActivity = true;
-            Transaction newTransaction = new Transaction(transactionID, timestamp, type, amount, status, suspiciousActivity);
-            this.transactionHistory.add(newTransaction);
-            this.suspiciousActivity.add(newTransaction);
-
-            throw new IllegalArgumentException("Withdrawal amount exceeds the limit of $5000.0!");
         }else {
             int transactionID = (int) (Math.random() * 1000000);
             int timestamp = (int) (System.currentTimeMillis() / 1000);
@@ -133,9 +133,18 @@ public class Checking implements BankAccount {
             this.transactionHistory.add(newTransaction);
             throw new IllegalArgumentException("Target account cannot be null or the same as the source account!");
         } else
-            
-
-        if(this.balance < amount){
+        
+        if (amount >= 5000.0){
+            int transactionID = (int) (Math.random() * 1000000);
+            int timestamp = (int) (System.currentTimeMillis() / 1000);
+            String type = "Transfer";
+            boolean status = false;
+            boolean suspiciousActivity = true;
+            Transaction newTransaction = new Transaction(transactionID, timestamp, type, amount, status, suspiciousActivity);
+            this.transactionHistory.add(newTransaction);
+            this.suspiciousActivity.add(newTransaction);
+            throw new IllegalArgumentException("Transfer amount exceeds the limit of $5000.0!");
+        }else if(this.balance < amount){
             int transactionID = (int) (Math.random() * 1000000);
             int timestamp = (int) (System.currentTimeMillis() / 1000);
             String type = "Transfer";
@@ -153,19 +162,7 @@ public class Checking implements BankAccount {
             Transaction newTransaction = new Transaction(transactionID, timestamp, type, amount, status, suspiciousActivity);
             this.transactionHistory.add(newTransaction);
             throw new IllegalArgumentException("Transfer amount must be greater than 0!");
-        }else if (amount > 5000.0){
-            int transactionID = (int) (Math.random() * 1000000);
-            int timestamp = (int) (System.currentTimeMillis() / 1000);
-            String type = "Transfer";
-            boolean status = false;
-            boolean suspiciousActivity = true;
-            Transaction newTransaction = new Transaction(transactionID, timestamp, type, amount, status, suspiciousActivity);
-            this.transactionHistory.add(newTransaction);
-            this.suspiciousActivity.add(newTransaction);
-            throw new IllegalArgumentException("Transfer amount exceeds the limit of $5000.0!");
-        }
-        
-        else{
+        } else{
             int transactionID = (int) (Math.random() * 1000000);
             int timestamp = (int) (System.currentTimeMillis() / 1000);
             String type = "Transfer";
@@ -173,7 +170,7 @@ public class Checking implements BankAccount {
             boolean suspiciousActivity = false;
             Transaction newTransaction = new Transaction(transactionID, timestamp, type, amount, status, suspiciousActivity);
             this.transactionHistory.add(newTransaction);
-            this.withdraw(amount);
+            this.balance -= amount;
             targetAccount.deposit(amount);  
         }
 
