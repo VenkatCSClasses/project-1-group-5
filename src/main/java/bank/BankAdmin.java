@@ -28,6 +28,7 @@ public class BankAdmin extends Customer{
         } else {
             throw new IllegalArgumentException("Invalid account type");
         }
+        
     }
 
     public void closeAccount(int accountNumber){
