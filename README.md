@@ -13,7 +13,7 @@ Faith - BankAccount, Transactions, Checking, Cli classes, Class Diagram, User Te
 Ahmad - Bank and Savings classes, fixed tests, Savings Sequence Diagram <br>
 
 Class Diagram by Faith
-![Class Diagram](FinalClassDiagram.png) <br>
+![Class Diagram](UpdatedClassDiagram.png) <br>
 
 Use Case Diagram by Baneet
 ![Use Case Diagram](Grp_5_Bank_Use_Case_Diagram.png)<br>
