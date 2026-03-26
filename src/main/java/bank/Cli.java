@@ -238,8 +238,8 @@ public class Cli{
                                     Atm.processTransaction(selectedAccount, amountDouble, 1);
                                     System.out.println("Deposit successful! New balance: $" + String.format("%.2f", selectedAccount.checkBalance()));
                                 }catch(IllegalArgumentException e){
-                                    System.out.println(e.getMessage());
-                                    continue; // skip the rest of the loop and start over
+                                    System.out.println("Transaction error:" + e.getMessage());
+                                     // skip the rest of the loop and start over
                                 }
 
                                 int _cNext = postActionChoice(scanner);
@@ -252,8 +252,12 @@ public class Cli{
 
                             } else if (customerChoiceInt == 2) {
                                 double amountDouble = readDouble(scanner, "Enter amount to withdraw:");
-                                Atm.processTransaction(selectedAccount, amountDouble, 0);
-                                System.out.println("Withdrawal successful! New balance: $" + String.format("%.2f", selectedAccount.checkBalance()));
+                                try{
+                                    Atm.processTransaction(selectedAccount, amountDouble, 0);
+                                    System.out.println("Withdrawal successful! New balance: $" + String.format("%.2f", selectedAccount.checkBalance()));
+                                }catch(IllegalArgumentException e){
+                                    System.out.println("Transaction error:" + e.getMessage());
+                                }
 
                                 int _cNext = postActionChoice(scanner);
                                 if (_cNext == 1) {
@@ -302,8 +306,13 @@ public class Cli{
 
                             if (customerChoiceInt == 1) {
                                 double amountDouble = readDouble(scanner, "Enter amount to deposit:");
-                                Atm.processTransaction(selectedAccount, amountDouble, 1);
-                                System.out.println("Deposit successful! New balance: $" + String.format("%.2f", selectedAccount.checkBalance()));
+                                try{
+                                    Atm.processTransaction(selectedAccount, amountDouble, 1);
+                                    System.out.println("Deposit successful! New balance: $" + String.format("%.2f", selectedAccount.checkBalance()));
+                                }catch(IllegalArgumentException e){
+                                    System.out.println("Transaction error:" + e.getMessage());
+                                }
+                                
 
                                 int _cNext = postActionChoice(scanner);
                                 if (_cNext == 1) {
@@ -314,8 +323,12 @@ public class Cli{
                                 }
                             } else if (customerChoiceInt == 2) {
                                 double amountDouble = readDouble(scanner, "Enter amount to withdraw:");
-                                Atm.processTransaction(selectedAccount, amountDouble, 0);
-                                System.out.println("Withdrawal successful! New balance: $" + String.format("%.2f", selectedAccount.checkBalance()));
+                                try{
+                                    Atm.processTransaction(selectedAccount, amountDouble, 0);
+                                    System.out.println("Withdrawal successful! New balance: $" + String.format("%.2f", selectedAccount.checkBalance()));
+                                }catch(IllegalArgumentException e){
+                                    System.out.println("Transaction error:" + e.getMessage());
+                                }
 
                                 int _cNext = postActionChoice(scanner);
                                 if (_cNext == 1) {
@@ -380,7 +393,7 @@ public class Cli{
                             System.out.println("Account created successfully!");
                         }
                         catch(IllegalArgumentException e){
-                            System.out.println(e.getMessage());
+                            System.out.println("Error creating account: " + e.getMessage());
                         }
 
                         int _next = postActionChoice(scanner);
@@ -394,7 +407,7 @@ public class Cli{
                         try{
                             adminObject.closeAccount(accountNumCloseInt);
                         }catch(IllegalArgumentException e){  
-                            System.out.println(e.getMessage());
+                            System.out.println("Error closing account: " + e.getMessage());
                         }
 
                         int _nextClose = postActionChoice(scanner);
@@ -419,7 +432,7 @@ public class Cli{
                             adminObject.processTransaction(accountNumInt, amountDouble, transactionTypeInt);
                             System.out.println("Transaction successful!");
                         }catch(IllegalArgumentException e){
-                            System.out.println(e.getMessage());
+                            System.out.println("Error processing transaction: " + e.getMessage());
                         }
 
                         int _nextTxn = postActionChoice(scanner);
@@ -444,7 +457,7 @@ public class Cli{
                             adminObject.toggleFreezeAccount(accountNumFreezeInt);
                             System.out.println("Account freeze toggled successfully!");
                         }catch(IllegalArgumentException e){   
-                            System.out.println(e.getMessage());
+                            System.out.println("Error toggling account freeze: " + e.getMessage());
                         }
 
                         int _nextToggle = postActionChoice(scanner);
@@ -467,7 +480,7 @@ public class Cli{
                                 }
                             }
                         }catch(IllegalArgumentException e){  
-                            System.out.println(e.getMessage());
+                            System.out.println("Error generating suspicious activity report: " + e.getMessage());
                         }
 
                         int _nextReport = postActionChoice(scanner);
@@ -529,7 +542,11 @@ public class Cli{
                     }else if(tellerChoiceInt == 2){
                         System.out.println("Close Account selected.");
                         int tellerAccountNumber = readInt(scanner, "Enter account number to close:");
-                        tellerObject.closeAccount(tellerAccountNumber);
+                        try{
+                            tellerObject.closeAccount(tellerAccountNumber);
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("Error closing account: " + e.getMessage());
+                        }
 
                         int _tClose = postActionChoice(scanner);
                         if (_tClose == 2) {
@@ -557,7 +574,7 @@ public class Cli{
                                 tellerObject.processTransaction(accountNumInt, amountDouble, 1);
                                 System.out.println("Deposit successful!");
                             }catch(IllegalArgumentException e){
-                                System.out.println(e.getMessage());
+                                System.out.println("Error processing transaction: " + e.getMessage());
                             }
 
                             int _tNextTxn = postActionChoice(scanner);
@@ -572,7 +589,7 @@ public class Cli{
                                 tellerObject.processTransaction(accountNumInt, amountDouble, 2);
                                 System.out.println("Withdrawal successful!");
                             }catch(IllegalArgumentException e){
-                                System.out.println(e.getMessage());
+                                System.out.println("Error processing transaction: " + e.getMessage());
                             }   
 
                             int _tNextWithdraw = postActionChoice(scanner);
